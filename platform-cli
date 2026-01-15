@@ -24,40 +24,49 @@ show_help() {
     echo "================================="
     echo ""
     echo "Comandos disponibles:"
-    echo "  start     - Iniciar toda la plataforma"
-    echo "  stop      - Detener todos los servicios"
-    echo "  status    - Ver estado de servicios"
-    echo "  setup     - Configuración inicial"
-    echo "  restart   - Reiniciar plataforma"
-    echo "  logs      - Ver logs de servicios"
-    echo "  help      - Mostrar esta ayuda"
+    echo "  start         - Iniciar toda la plataforma"
+    echo "  stop          - Detener todos los servicios"
+    echo "  status        - Ver estado de servicios"
+    echo "  setup         - Configuración inicial"
+    echo "  restart       - Reiniciar plataforma"
+    echo "  logs          - Ver logs de servicios"
+    echo "  install-deps  - Instalar dependencias Python"
+    echo "  help          - Mostrar esta ayuda"
     echo ""
     echo "Ejemplos:"
     echo "  ./platform-cli start"
     echo "  ./platform-cli status"
     echo "  ./platform-cli logs ai-agent"
+    echo "  ./platform-cli install-deps"
+    echo ""
+    echo "Notas:"
+    echo "  - Docker es opcional (PostgreSQL se omite si no está disponible)"
+    echo "  - Node.js es opcional (Backstage se omite si no está disponible)"
+    echo "  - Solo Python3 es requerido para el AI Agent"
 }
 
 # Verificar prerequisitos
 check_prerequisites() {
     log_info "Verificando prerequisitos..."
     
-    # Docker
-    if ! command -v docker &> /dev/null; then
-        log_error "Docker no encontrado. Instalar: sudo apt install docker.io"
-        exit 1
-    fi
-    
-    # Python
+    # Python (requerido)
     if ! command -v python3 &> /dev/null; then
         log_error "Python3 no encontrado"
         exit 1
     fi
     
-    # Node.js
+    # Node.js (opcional para Backstage)
     if ! command -v node &> /dev/null; then
-        log_error "Node.js no encontrado. Instalar: curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash - && sudo apt-get install -y nodejs"
-        exit 1
+        log_warning "Node.js no encontrado. Backstage no estará disponible."
+        log_info "Para instalar: curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash - && sudo apt-get install -y nodejs"
+        SKIP_BACKSTAGE=true
+    fi
+    
+    # Docker (opcional para PostgreSQL)
+    if ! command -v docker &> /dev/null; then
+        log_warning "Docker no encontrado. PostgreSQL no estará disponible."
+        log_info "Backstage usará SQLite en su lugar."
+        SKIP_POSTGRES=true
     fi
     
     log_success "Prerequisitos verificados"
@@ -65,14 +74,23 @@ check_prerequisites() {
 
 # 1. PostgreSQL (Puerto 5432)
 start_postgres() {
+    if [ "$SKIP_POSTGRES" = true ]; then
+        log_warning "PostgreSQL omitido - Docker no disponible"
+        return 0
+    fi
+    
     log_info "Iniciando PostgreSQL..."
     
     if ! nc -z localhost 5432 2>/dev/null; then
-        cd /home/giovanemere/docker/postgres
-        ./start-postgres.sh
-        sleep 5
-        cd /home/giovanemere/demos
-        log_success "PostgreSQL iniciado en puerto 5432"
+        if [ -f "/home/giovanemere/docker/postgres/start-postgres.sh" ]; then
+            cd /home/giovanemere/docker/postgres
+            ./start-postgres.sh
+            sleep 5
+            cd /home/giovanemere/demos/infra-ai-agent
+            log_success "PostgreSQL iniciado en puerto 5432"
+        else
+            log_warning "PostgreSQL setup no encontrado, continuando sin base de datos"
+        fi
     else
         log_warning "PostgreSQL ya está ejecutándose"
     fi
@@ -83,27 +101,45 @@ start_ai_agent() {
     log_info "Iniciando AI Agent..."
     
     if ! curl -s http://localhost:8000/health &>/dev/null; then
-        cd infra-ai-agent
-        
         # Verificar .env
         if [ ! -f ".env" ]; then
-            log_error "Archivo .env no encontrado en infra-ai-agent/"
-            log_info "Copia .env.example a .env y configura GEMINI_API_KEY"
-            exit 1
+            log_warning "Archivo .env no encontrado, creando desde .env.example"
+            if [ -f ".env.example" ]; then
+                cp .env.example .env
+                log_warning "⚠️  Configura GEMINI_API_KEY en .env antes de usar el agente"
+            else
+                log_error "No se encontró .env.example"
+                return 1
+            fi
         fi
         
         # Verificar API key
-        if grep -q "your_gemini_api_key_here" .env; then
-            log_error "GEMINI_API_KEY no configurado en .env"
-            exit 1
+        if grep -q "your_gemini_api_key_here" .env 2>/dev/null; then
+            log_warning "GEMINI_API_KEY no configurado - el agente funcionará con limitaciones"
         fi
         
-        ./start.sh &
+        # Instalar dependencias si es necesario
+        if ! python3 -c "import fastapi" 2>/dev/null; then
+            log_info "Instalando dependencias Python..."
+            python3 -m pip install --user fastapi uvicorn google-generativeai pillow pyyaml python-multipart 2>/dev/null || {
+                log_warning "No se pudieron instalar dependencias automáticamente"
+                log_info "Instala manualmente: pip install fastapi uvicorn google-generativeai pillow pyyaml python-multipart"
+            }
+        fi
+        
+        # Iniciar AI Agent
+        log_info "Iniciando servidor AI Agent..."
+        nohup python3 -m uvicorn agent.main:app --host 0.0.0.0 --port 8000 > ai-agent.log 2>&1 &
         AI_PID=$!
-        echo $AI_PID > ../ai-agent.pid
-        sleep 10
-        cd ..
-        log_success "AI Agent iniciado en puerto 8000"
+        echo $AI_PID > ai-agent.pid
+        sleep 5
+        
+        # Verificar que inició correctamente
+        if curl -s http://localhost:8000/health &>/dev/null; then
+            log_success "AI Agent iniciado en puerto 8000"
+        else
+            log_warning "AI Agent puede tener problemas - revisa ai-agent.log"
+        fi
     else
         log_warning "AI Agent ya está ejecutándose"
     fi
@@ -111,30 +147,53 @@ start_ai_agent() {
 
 # 3. Backstage (Puertos 3000/7007)
 start_backstage() {
+    if [ "$SKIP_BACKSTAGE" = true ]; then
+        log_warning "Backstage omitido - Node.js no disponible"
+        return 0
+    fi
+    
     log_info "Iniciando Backstage..."
     
     if ! curl -s http://localhost:3000 &>/dev/null; then
-        cd backstage-idp
+        local backstage_path="/home/giovanemere/demos/backstage-idp"
+        
+        if [ ! -d "$backstage_path" ]; then
+            log_warning "Backstage no encontrado en $backstage_path"
+            return 1
+        fi
+        
+        cd "$backstage_path"
         
         # Verificar si está configurado
         if [ ! -d "infra-ai-backstage" ]; then
-            log_warning "Backstage no configurado. Ejecutando setup..."
-            ./setup-backstage.sh
+            log_info "Backstage no configurado, ejecutando setup..."
+            if [ -f "./setup-backstage.sh" ]; then
+                ./setup-backstage.sh
+            else
+                log_warning "Setup de Backstage no encontrado"
+                cd /home/giovanemere/demos/infra-ai-agent
+                return 1
+            fi
         fi
         
         # Verificar .env
         if [ ! -f "infra-ai-backstage/.env" ]; then
-            log_error "Variables de entorno no configuradas"
+            log_warning "Variables de entorno no configuradas para Backstage"
             log_info "Configura GITHUB_TOKEN en infra-ai-backstage/.env"
-            exit 1
         fi
         
-        ./scripts/start-backstage.sh &
-        BS_PID=$!
-        echo $BS_PID > ../backstage.pid
-        sleep 15
-        cd ..
-        log_success "Backstage iniciado en puertos 3000/7007"
+        # Intentar iniciar Backstage
+        if [ -f "./scripts/start-backstage.sh" ]; then
+            nohup ./scripts/start-backstage.sh > backstage.log 2>&1 &
+            BS_PID=$!
+            echo $BS_PID > /home/giovanemere/demos/infra-ai-agent/backstage.pid
+            sleep 10
+            log_success "Backstage iniciado en puertos 3000/7007"
+        else
+            log_warning "Script de inicio de Backstage no encontrado"
+        fi
+        
+        cd /home/giovanemere/demos/infra-ai-agent
     else
         log_warning "Backstage ya está ejecutándose"
     fi
@@ -245,6 +304,10 @@ show_logs() {
 
 # Función principal
 main() {
+    # Variables globales
+    SKIP_POSTGRES=false
+    SKIP_BACKSTAGE=false
+    
     case ${1:-help} in
         "start")
             log_info "🚀 Iniciando Infrastructure AI Platform..."
@@ -253,14 +316,24 @@ main() {
             start_ai_agent
             start_backstage
             echo ""
-            log_success "🎉 Plataforma iniciada exitosamente!"
+            log_success "🎉 Plataforma iniciada!"
             echo ""
             echo "🌐 URLs disponibles:"
             echo "  🤖 AI Agent:    http://localhost:8000"
             echo "  📚 AI Docs:     http://localhost:8000/docs"
-            echo "  🎭 Backstage:   http://localhost:3000"
-            echo "  🔧 Backstage API: http://localhost:7007"
-            echo "  🐘 PostgreSQL:  localhost:5432"
+            if [ "$SKIP_BACKSTAGE" != true ]; then
+                echo "  🎭 Backstage:   http://localhost:3000"
+                echo "  🔧 Backstage API: http://localhost:7007"
+            fi
+            if [ "$SKIP_POSTGRES" != true ]; then
+                echo "  🐘 PostgreSQL:  localhost:5432"
+            fi
+            echo ""
+            echo "📋 Para ver logs:"
+            echo "  ./platform-cli logs ai-agent"
+            if [ "$SKIP_BACKSTAGE" != true ]; then
+                echo "  ./platform-cli logs backstage"
+            fi
             ;;
         "stop")
             log_info "🛑 Deteniendo Infrastructure AI Platform..."
@@ -277,6 +350,7 @@ main() {
             log_info "🔄 Reiniciando plataforma..."
             stop_services
             sleep 3
+            check_prerequisites
             start_postgres
             start_ai_agent
             start_backstage
@@ -284,6 +358,20 @@ main() {
             ;;
         "logs")
             show_logs $2
+            ;;
+        "install-deps")
+            log_info "🔧 Instalando dependencias..."
+            # Intentar diferentes métodos de instalación
+            if command -v pip3 &> /dev/null; then
+                pip3 install --user fastapi uvicorn google-generativeai pillow pyyaml python-multipart
+            elif python3 -c "import pip" 2>/dev/null; then
+                python3 -m pip install --user fastapi uvicorn google-generativeai pillow pyyaml python-multipart
+            else
+                log_warning "pip no disponible. Instalando con apt..."
+                sudo apt update && sudo apt install -y python3-pip
+                python3 -m pip install --user fastapi uvicorn google-generativeai pillow pyyaml python-multipart
+            fi
+            log_success "Dependencias instaladas"
             ;;
         "help"|*)
             show_help
