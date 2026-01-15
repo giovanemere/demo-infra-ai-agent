@@ -1,0 +1,294 @@
+#!/bin/bash
+
+# =============================================================================
+# Infrastructure AI Platform - Master CLI
+# =============================================================================
+
+set -e
+
+# Colores
+GREEN='\033[0;32m'
+BLUE='\033[0;34m'
+YELLOW='\033[1;33m'
+RED='\033[0;31m'
+NC='\033[0m'
+
+log_info() { echo -e "${BLUE}🔵 $1${NC}"; }
+log_success() { echo -e "${GREEN}✅ $1${NC}"; }
+log_warning() { echo -e "${YELLOW}⚠️  $1${NC}"; }
+log_error() { echo -e "${RED}❌ $1${NC}"; }
+
+# Función para mostrar ayuda
+show_help() {
+    echo "🚀 Infrastructure AI Platform CLI"
+    echo "================================="
+    echo ""
+    echo "Comandos disponibles:"
+    echo "  start     - Iniciar toda la plataforma"
+    echo "  stop      - Detener todos los servicios"
+    echo "  status    - Ver estado de servicios"
+    echo "  setup     - Configuración inicial"
+    echo "  restart   - Reiniciar plataforma"
+    echo "  logs      - Ver logs de servicios"
+    echo "  help      - Mostrar esta ayuda"
+    echo ""
+    echo "Ejemplos:"
+    echo "  ./platform-cli start"
+    echo "  ./platform-cli status"
+    echo "  ./platform-cli logs ai-agent"
+}
+
+# Verificar prerequisitos
+check_prerequisites() {
+    log_info "Verificando prerequisitos..."
+    
+    # Docker
+    if ! command -v docker &> /dev/null; then
+        log_error "Docker no encontrado. Instalar: sudo apt install docker.io"
+        exit 1
+    fi
+    
+    # Python
+    if ! command -v python3 &> /dev/null; then
+        log_error "Python3 no encontrado"
+        exit 1
+    fi
+    
+    # Node.js
+    if ! command -v node &> /dev/null; then
+        log_error "Node.js no encontrado. Instalar: curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash - && sudo apt-get install -y nodejs"
+        exit 1
+    fi
+    
+    log_success "Prerequisitos verificados"
+}
+
+# 1. PostgreSQL (Puerto 5432)
+start_postgres() {
+    log_info "Iniciando PostgreSQL..."
+    
+    if ! nc -z localhost 5432 2>/dev/null; then
+        cd /home/giovanemere/docker/postgres
+        ./start-postgres.sh
+        sleep 5
+        cd /home/giovanemere/demos
+        log_success "PostgreSQL iniciado en puerto 5432"
+    else
+        log_warning "PostgreSQL ya está ejecutándose"
+    fi
+}
+
+# 2. AI Agent (Puerto 8000)
+start_ai_agent() {
+    log_info "Iniciando AI Agent..."
+    
+    if ! curl -s http://localhost:8000/health &>/dev/null; then
+        cd infra-ai-agent
+        
+        # Verificar .env
+        if [ ! -f ".env" ]; then
+            log_error "Archivo .env no encontrado en infra-ai-agent/"
+            log_info "Copia .env.example a .env y configura GEMINI_API_KEY"
+            exit 1
+        fi
+        
+        # Verificar API key
+        if grep -q "your_gemini_api_key_here" .env; then
+            log_error "GEMINI_API_KEY no configurado en .env"
+            exit 1
+        fi
+        
+        ./start.sh &
+        AI_PID=$!
+        echo $AI_PID > ../ai-agent.pid
+        sleep 10
+        cd ..
+        log_success "AI Agent iniciado en puerto 8000"
+    else
+        log_warning "AI Agent ya está ejecutándose"
+    fi
+}
+
+# 3. Backstage (Puertos 3000/7007)
+start_backstage() {
+    log_info "Iniciando Backstage..."
+    
+    if ! curl -s http://localhost:3000 &>/dev/null; then
+        cd backstage-idp
+        
+        # Verificar si está configurado
+        if [ ! -d "infra-ai-backstage" ]; then
+            log_warning "Backstage no configurado. Ejecutando setup..."
+            ./setup-backstage.sh
+        fi
+        
+        # Verificar .env
+        if [ ! -f "infra-ai-backstage/.env" ]; then
+            log_error "Variables de entorno no configuradas"
+            log_info "Configura GITHUB_TOKEN en infra-ai-backstage/.env"
+            exit 1
+        fi
+        
+        ./scripts/start-backstage.sh &
+        BS_PID=$!
+        echo $BS_PID > ../backstage.pid
+        sleep 15
+        cd ..
+        log_success "Backstage iniciado en puertos 3000/7007"
+    else
+        log_warning "Backstage ya está ejecutándose"
+    fi
+}
+
+# Verificar estado de servicios
+check_status() {
+    log_info "Verificando estado de servicios..."
+    
+    # PostgreSQL
+    if nc -z localhost 5432 2>/dev/null; then
+        log_success "PostgreSQL: Funcionando (puerto 5432)"
+    else
+        log_error "PostgreSQL: No disponible"
+    fi
+    
+    # AI Agent
+    if curl -s http://localhost:8000/health &>/dev/null; then
+        log_success "AI Agent: Funcionando (puerto 8000)"
+    else
+        log_error "AI Agent: No disponible"
+    fi
+    
+    # Backstage UI
+    if curl -s http://localhost:3000 &>/dev/null; then
+        log_success "Backstage UI: Funcionando (puerto 3000)"
+    else
+        log_error "Backstage UI: No disponible"
+    fi
+    
+    # Backstage API
+    if curl -s http://localhost:7007 &>/dev/null; then
+        log_success "Backstage API: Funcionando (puerto 7007)"
+    else
+        log_error "Backstage API: No disponible"
+    fi
+}
+
+# Detener servicios
+stop_services() {
+    log_info "Deteniendo servicios..."
+    
+    # AI Agent
+    if [ -f "ai-agent.pid" ]; then
+        AI_PID=$(cat ai-agent.pid)
+        kill $AI_PID 2>/dev/null && log_success "AI Agent detenido"
+        rm ai-agent.pid
+    fi
+    
+    # Backstage
+    if [ -f "backstage.pid" ]; then
+        BS_PID=$(cat backstage.pid)
+        kill $BS_PID 2>/dev/null && log_success "Backstage detenido"
+        rm backstage.pid
+    fi
+    
+    # PostgreSQL
+    cd /home/giovanemere/docker/postgres
+    docker-compose down && log_success "PostgreSQL detenido"
+    cd /home/giovanemere/demos
+    
+    # Limpiar procesos restantes
+    pkill -f "uvicorn.*8000" 2>/dev/null || true
+    pkill -f "yarn.*dev" 2>/dev/null || true
+}
+
+# Setup inicial
+setup_platform() {
+    log_info "Configurando plataforma..."
+    
+    check_prerequisites
+    
+    # Setup AI Agent
+    cd infra-ai-agent
+    ./setup.sh
+    cd ..
+    
+    # Setup Backstage
+    cd backstage-idp
+    ./setup-backstage.sh
+    cd ..
+    
+    log_success "Setup completado"
+    log_warning "Configura las variables de entorno antes de iniciar:"
+    log_info "1. GEMINI_API_KEY en infra-ai-agent/.env"
+    log_info "2. GITHUB_TOKEN en backstage-idp/infra-ai-backstage/.env"
+}
+
+# Ver logs
+show_logs() {
+    local service=$1
+    
+    case $service in
+        "postgres")
+            docker logs backstage-postgres -f
+            ;;
+        "ai-agent")
+            tail -f infra-ai-agent/logs/agent.log 2>/dev/null || echo "No hay logs disponibles"
+            ;;
+        "backstage")
+            tail -f backstage-idp/infra-ai-backstage/packages/backend/dist/logs/backend.log 2>/dev/null || echo "No hay logs disponibles"
+            ;;
+        *)
+            log_error "Servicio no válido. Opciones: postgres, ai-agent, backstage"
+            ;;
+    esac
+}
+
+# Función principal
+main() {
+    case ${1:-help} in
+        "start")
+            log_info "🚀 Iniciando Infrastructure AI Platform..."
+            check_prerequisites
+            start_postgres
+            start_ai_agent
+            start_backstage
+            echo ""
+            log_success "🎉 Plataforma iniciada exitosamente!"
+            echo ""
+            echo "🌐 URLs disponibles:"
+            echo "  🤖 AI Agent:    http://localhost:8000"
+            echo "  📚 AI Docs:     http://localhost:8000/docs"
+            echo "  🎭 Backstage:   http://localhost:3000"
+            echo "  🔧 Backstage API: http://localhost:7007"
+            echo "  🐘 PostgreSQL:  localhost:5432"
+            ;;
+        "stop")
+            log_info "🛑 Deteniendo Infrastructure AI Platform..."
+            stop_services
+            log_success "Plataforma detenida"
+            ;;
+        "status")
+            check_status
+            ;;
+        "setup")
+            setup_platform
+            ;;
+        "restart")
+            log_info "🔄 Reiniciando plataforma..."
+            stop_services
+            sleep 3
+            start_postgres
+            start_ai_agent
+            start_backstage
+            log_success "Plataforma reiniciada"
+            ;;
+        "logs")
+            show_logs $2
+            ;;
+        "help"|*)
+            show_help
+            ;;
+    esac
+}
+
+main "$@"
