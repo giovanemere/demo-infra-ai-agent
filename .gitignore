@@ -1,0 +1,47 @@
+# Environment variables
+.env
+.env.local
+.env.production
+
+# Logs
+logs/
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+temp/
+tmp/
+*.tmp
+
+# Keys and certificates
+*.pem
+*.key
+*.crt
+id_rsa*
+
+# Node modules
+node_modules/
+
+# Python
+__pycache__/
+*.py[cod]
+venv/
+.venv/
+
+# Git repositories (submodules) - Excluir completamente
+backstage-idp/
+catalog-repo/
+infra-ai-agent/
+templates-repo/
+
+# Process IDs
+*.pid

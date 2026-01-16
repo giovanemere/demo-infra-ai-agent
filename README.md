@@ -81,8 +81,9 @@ cd demos && ./start-platform.sh
 ./monitor-platform.sh  # Estado de servicios
 ```
 
-## 📚 Docs
+## 📚 Documentación
 
+- [Guía Completa de Comandos](COMMANDS_GUIDE.md)
+- [Referencia Rápida](QUICK_REFERENCE.md)
 - [Setup Completo](SETUP.md)
-- [API Reference](http://localhost:8000/docs)
 - [Troubleshooting](TROUBLESHOOTING.md)
