@@ -15,7 +15,8 @@ if [ ! -f .env ]; then
     exit 1
 fi
 
-# Instalar dependencias
+# Activar entorno virtual y instalar dependencias
+source venv/bin/activate
 pip install -r requirements.txt
 
 # Iniciar servidor

@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🤖 Infrastructure AI Platform</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f5f7fa; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .header { text-align: center; margin-bottom: 30px; }
+        .header h1 { color: #2c3e50; margin-bottom: 10px; }
+        .tabs { display: flex; gap: 10px; margin-bottom: 20px; }
+        .tab-btn { padding: 12px 24px; border: none; background: #ecf0f1; cursor: pointer; border-radius: 6px; }
+        .tab-btn.active { background: #3498db; color: white; }
+        .tab-content { display: none; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .tab-content.active { display: block; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 600; color: #2c3e50; }
+        .form-group input, .form-group textarea { width: 100%; padding: 12px; border: 2px solid #ecf0f1; border-radius: 6px; font-size: 14px; }
+        .form-group input:focus, .form-group textarea:focus { outline: none; border-color: #3498db; }
+        .btn { background: #3498db; color: white; padding: 12px 24px; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; }
+        .btn:hover { background: #2980b9; }
+        .btn:disabled { background: #bdc3c7; cursor: not-allowed; }
+        .result { margin-top: 20px; padding: 20px; background: #f8f9fa; border-radius: 6px; border-left: 4px solid #3498db; }
+        .error { border-left-color: #e74c3c; background: #fdf2f2; }
+        .success { border-left-color: #27ae60; background: #f0f9f4; }
+        .history { max-height: 400px; overflow-y: auto; }
+        .history-item { padding: 15px; border-bottom: 1px solid #ecf0f1; }
+        .history-item:last-child { border-bottom: none; }
+        .loading { display: none; text-align: center; padding: 20px; }
+        .spinner { border: 3px solid #f3f3f3; border-top: 3px solid #3498db; border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin: 0 auto 10px; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .process-steps { background: #f8f9fa; border-radius: 6px; padding: 15px; margin: 10px 0; }
+        .step { padding: 8px 0; border-left: 3px solid #ecf0f1; padding-left: 15px; margin: 5px 0; }
+        .step.active { border-left-color: #3498db; background: #e3f2fd; }
+        .step.completed { border-left-color: #27ae60; background: #e8f5e8; }
+        .step.error { border-left-color: #e74c3c; background: #fdf2f2; }
+        .step-icon { display: inline-block; width: 20px; margin-right: 8px; }
+        .file-structure { background: #2c3e50; color: #ecf0f1; padding: 15px; border-radius: 6px; font-family: monospace; font-size: 12px; margin: 10px 0; }
+        .github-info { background: #f0f9f4; border: 1px solid #27ae60; border-radius: 6px; padding: 15px; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🤖 Infrastructure AI Platform</h1>
+            <p>Análisis automático de arquitecturas AWS con IA → Catálogo Backstage</p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="showTab('text')">📝 Procesar Texto</button>
+            <button class="tab-btn" onclick="showTab('image')">🖼️ Procesar Imagen</button>
+            <button class="tab-btn" onclick="showTab('history')">📊 Historial</button>
+            <button class="tab-btn" onclick="showTab('config')">⚙️ Configurar GitHub</button>
+        </div>
+
+        <div id="text" class="tab-content active">
+            <h2>📝 Procesar Descripción de Texto</h2>
+            <form id="textForm">
+                <div class="form-group">
+                    <label>Descripción de la arquitectura AWS:</label>
+                    <textarea name="description" rows="6" placeholder="Ejemplo: Una aplicación web con S3 para almacenamiento, CloudFront como CDN, Lambda para procesamiento serverless y RDS para base de datos..."></textarea>
+                </div>
+                <button type="submit" class="btn">🚀 Procesar Arquitectura</button>
+            </form>
+            <div class="loading" id="textLoading">
+                <div class="spinner"></div>
+                <p>Procesando con IA...</p>
+                <div class="process-steps" id="textSteps">
+                    <div class="step" id="step1">
+                        <span class="step-icon">🤖</span>
+                        <span>Analizando descripción con Gemini AI...</span>
+                    </div>
+                    <div class="step" id="step2">
+                        <span class="step-icon">📝</span>
+                        <span>Generando YAML para Backstage...</span>
+                    </div>
+                    <div class="step" id="step3">
+                        <span class="step-icon">📁</span>
+                        <span>Creando estructura de proyecto...</span>
+                    </div>
+                    <div class="step" id="step4">
+                        <span class="step-icon">📚</span>
+                        <span>Generando documentación automática...</span>
+                    </div>
+                    <div class="step" id="step5">
+                        <span class="step-icon">🔗</span>
+                        <span>Subiendo a GitHub...</span>
+                    </div>
+                    <div class="step" id="step6">
+                        <span class="step-icon">✅</span>
+                        <span>Preparando para Backstage auto-discovery...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="image" class="tab-content">
+            <h2>🖼️ Procesar Imagen de Arquitectura</h2>
+            <form id="imageForm">
+                <div class="form-group">
+                    <label>Imagen de arquitectura (PNG, JPG):</label>
+                    <input type="file" name="image" accept="image/*">
+                </div>
+                <button type="submit" class="btn">🔍 Analizar Imagen</button>
+            </form>
+            <div class="loading" id="imageLoading">
+                <div class="spinner"></div>
+                <p>Analizando imagen con IA...</p>
+                <div class="process-steps" id="imageSteps">
+                    <div class="step" id="imgStep1">
+                        <span class="step-icon">🖼️</span>
+                        <span>Procesando imagen con Gemini Vision...</span>
+                    </div>
+                    <div class="step" id="imgStep2">
+                        <span class="step-icon">🔍</span>
+                        <span>Detectando servicios AWS en la imagen...</span>
+                    </div>
+                    <div class="step" id="imgStep3">
+                        <span class="step-icon">📝</span>
+                        <span>Generando YAML para Backstage...</span>
+                    </div>
+                    <div class="step" id="imgStep4">
+                        <span class="step-icon">📁</span>
+                        <span>Creando estructura de proyecto...</span>
+                    </div>
+                    <div class="step" id="imgStep5">
+                        <span class="step-icon">🔗</span>
+                        <span>Subiendo a GitHub...</span>
+                    </div>
+                    <div class="step" id="imgStep6">
+                        <span class="step-icon">✅</span>
+                        <span>Listo para Backstage!</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="history" class="tab-content">
+            <h2>📊 Historial de Análisis</h2>
+            <button onclick="loadHistory()" class="btn" style="margin-bottom: 20px;">🔄 Actualizar Historial</button>
+            <div id="historyContent" class="history">
+                <p>Cargando historial...</p>
+            </div>
+        </div>
+
+        <div id="config" class="tab-content">
+            <h2>⚙️ Configurar GitHub</h2>
+            <form id="configForm">
+                <div class="form-group">
+                    <label>URL del Repositorio:</label>
+                    <input type="text" name="repository_url" placeholder="https://github.com/usuario/repositorio" required>
+                </div>
+                <div class="form-group">
+                    <label>Branch:</label>
+                    <input type="text" name="branch" value="main">
+                </div>
+                <div class="form-group">
+                    <label>GitHub Token (Personal Access Token):</label>
+                    <input type="password" name="github_token" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
+                    <small style="color: #666;">Opcional: Token para acceso privado a repositorios</small>
+                </div>
+                <button type="submit" class="btn">💾 Guardar Configuración</button>
+            </form>
+        </div>
+
+        <div id="result" class="result" style="display:none;"></div>
+    </div>
+
+    <script>
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+            
+            if (tabName === 'history') {
+                loadHistory();
+            }
+        }
+
+        function simulateSteps(stepPrefix, totalSteps) {
+            return new Promise((resolve) => {
+                let currentStep = 1;
+                const interval = setInterval(() => {
+                    // Marcar paso anterior como completado
+                    if (currentStep > 1) {
+                        const prevStep = document.getElementById(`${stepPrefix}${currentStep - 1}`);
+                        if (prevStep) {
+                            prevStep.classList.remove('active');
+                            prevStep.classList.add('completed');
+                        }
+                    }
+                    
+                    // Activar paso actual
+                    const currentStepEl = document.getElementById(`${stepPrefix}${currentStep}`);
+                    if (currentStepEl) {
+                        currentStepEl.classList.add('active');
+                    }
+                    
+                    currentStep++;
+                    
+                    if (currentStep > totalSteps) {
+                        // Completar último paso
+                        const lastStep = document.getElementById(`${stepPrefix}${totalSteps}`);
+                        if (lastStep) {
+                            lastStep.classList.remove('active');
+                            lastStep.classList.add('completed');
+                        }
+                        clearInterval(interval);
+                        resolve();
+                    }
+                }, 800); // 800ms entre pasos
+            });
+        }
+
+        function resetSteps(stepPrefix, totalSteps) {
+            for (let i = 1; i <= totalSteps; i++) {
+                const step = document.getElementById(`${stepPrefix}${i}`);
+                if (step) {
+                    step.classList.remove('active', 'completed', 'error');
+                }
+            }
+        }
+
+        function showProjectStructure(projectName) {
+            return `
+                <div class="file-structure">
+📁 projects/${projectName}/
+├── 📄 catalog-info.yaml          # Archivo principal Backstage
+├── 📄 README.md                  # Documentación del proyecto
+└── 📁 docs/
+    └── 📄 architecture.md        # Documentación técnica
+                </div>
+            `;
+        }
+
+        function showGitHubInfo(githubUrl, projectName) {
+            return `
+                <div class="github-info">
+                    <h4>🔗 Proyecto subido a GitHub</h4>
+                    <p><strong>URL:</strong> <a href="${githubUrl}" target="_blank">${githubUrl}</a></p>
+                    <p><strong>Estructura:</strong> Proyecto completo con documentación</p>
+                    <p><strong>Backstage:</strong> Listo para auto-discovery</p>
+                </div>
+            `;
+        }
+
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+            
+            if (tabName === 'history') {
+                loadHistory();
+            }
+        }
+
+        function showResult(content, type = 'success') {
+            const result = document.getElementById('result');
+            result.className = `result ${type}`;
+            result.innerHTML = content;
+            result.style.display = 'block';
+            result.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        async function loadHistory() {
+            try {
+                const response = await fetch('/history');
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    const historyHtml = data.analyses.map(analysis => `
+                        <div class="history-item">
+                            <strong>ID: ${analysis.id}</strong> - ${analysis.type.toUpperCase()}
+                            <br><small>${analysis.created_at}</small>
+                            <br>${analysis.content}
+                            ${analysis.github_url ? `<br><a href="${analysis.github_url}" target="_blank">🔗 Ver en GitHub</a>` : ''}
+                        </div>
+                    `).join('');
+                    
+                    document.getElementById('historyContent').innerHTML = 
+                        historyHtml || '<p>No hay análisis en el historial.</p>';
+                } else {
+                    document.getElementById('historyContent').innerHTML = 
+                        '<p class="error">Error al cargar historial.</p>';
+                }
+            } catch (error) {
+                document.getElementById('historyContent').innerHTML = 
+                    '<p class="error">Error de conexión.</p>';
+            }
+        }
+
+        document.getElementById('textForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const loading = document.getElementById('textLoading');
+            const btn = e.target.querySelector('button');
+            
+            loading.style.display = 'block';
+            btn.disabled = true;
+            
+            // Reset y simular pasos
+            resetSteps('step', 6);
+            const stepsPromise = simulateSteps('step', 6);
+            
+            try {
+                const formData = new FormData(e.target);
+                
+                // Iniciar simulación de pasos
+                stepsPromise;
+                
+                const response = await fetch('/process-text', { method: 'POST', body: formData });
+                const result = await response.json();
+                
+                // Esperar a que terminen los pasos
+                await stepsPromise;
+                
+                if (result.status === 'success') {
+                    showResult(`
+                        <h3>✅ Análisis Completado</h3>
+                        <p><strong>ID:</strong> ${result.analysis_id}</p>
+                        <p><strong>Proyecto:</strong> ${result.project_name}</p>
+                        
+                        <h4>📁 Estructura Creada:</h4>
+                        ${showProjectStructure(result.project_name)}
+                        
+                        ${showGitHubInfo(result.github_url, result.project_name)}
+                        
+                        <p><strong>🤖 IA:</strong> ${result.backstage_discovery}</p>
+                        
+                        <details>
+                            <summary>📄 Ver YAML generado</summary>
+                            <pre>${result.yaml_content}</pre>
+                        </details>
+                    `, 'success');
+                } else {
+                    showResult(`<h3>❌ Error</h3><p>${result.message}</p>`, 'error');
+                }
+            } catch (error) {
+                showResult(`<h3>❌ Error de Conexión</h3><p>${error.message}</p>`, 'error');
+            } finally {
+                loading.style.display = 'none';
+                btn.disabled = false;
+            }
+        });
+
+        document.getElementById('imageForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const loading = document.getElementById('imageLoading');
+            const btn = e.target.querySelector('button');
+            
+            loading.style.display = 'block';
+            btn.disabled = true;
+            
+            // Reset y simular pasos
+            resetSteps('imgStep', 6);
+            const stepsPromise = simulateSteps('imgStep', 6);
+            
+            try {
+                const formData = new FormData(e.target);
+                
+                // Iniciar simulación de pasos
+                stepsPromise;
+                
+                const response = await fetch('/process-image', { method: 'POST', body: formData });
+                const result = await response.json();
+                
+                // Esperar a que terminen los pasos
+                await stepsPromise;
+                
+                if (result.status === 'success') {
+                    showResult(`
+                        <h3>✅ Imagen Analizada</h3>
+                        <p><strong>ID:</strong> ${result.analysis_id}</p>
+                        <p><strong>Proyecto:</strong> ${result.project_name}</p>
+                        
+                        <h4>📁 Estructura Creada:</h4>
+                        ${showProjectStructure(result.project_name)}
+                        
+                        ${showGitHubInfo(result.github_url, result.project_name)}
+                        
+                        <p><strong>🤖 IA:</strong> ${result.backstage_discovery}</p>
+                        
+                        <details>
+                            <summary>📄 Ver YAML generado</summary>
+                            <pre>${result.yaml_content}</pre>
+                        </details>
+                    `, 'success');
+                } else {
+                    showResult(`<h3>❌ Error</h3><p>${result.message}</p>`, 'error');
+                }
+            } catch (error) {
+                showResult(`<h3>❌ Error de Conexión</h3><p>${error.message}</p>`, 'error');
+            } finally {
+                loading.style.display = 'none';
+                btn.disabled = false;
+            }
+        });
+
+        document.getElementById('configForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            
+            try {
+                const response = await fetch('/configure-github', { method: 'POST', body: formData });
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    showResult(`
+                        <h3>✅ Configuración Guardada</h3>
+                        <p><strong>Repositorio:</strong> ${result.repository_url}</p>
+                        <p><strong>Branch:</strong> ${result.branch}</p>
+                        <p><strong>Token:</strong> ${result.token_configured ? '✅ Configurado' : '❌ No configurado'}</p>
+                        <p>GitHub configurado correctamente para subir proyectos automáticamente.</p>
+                    `, 'success');
+                } else {
+                    showResult(`<h3>❌ Error</h3><p>${result.message}</p>`, 'error');
+                }
+            } catch (error) {
+                showResult(`<h3>❌ Error de Conexión</h3><p>${error.message}</p>`, 'error');
+            }
+        });
+
+        // Cargar historial al inicio
+        loadHistory();
+    </script>
+</body>
+</html>
