@@ -1,336 +1,57 @@
 apiVersion: backstage.io/v1alpha1
-kind: System
-metadata:
-  name: infra-ai-agent-system
-  title: "Sistema de Agente IA para Arquitecturas AWS"
-  description: "Sistema completo para análisis automático de arquitecturas AWS y generación de catálogos Backstage"
-  tags:
-    - ai
-    - aws
-    - architecture
-    - automation
-    - platform-engineering
-  annotations:
-    github.com/project-slug: giovanemere/demo-infra-ai-agent
-    ai-agent.com/type: architecture-analyzer
-    ai-agent.com/version: "1.0.0"
-    aws.com/cost-center: free-tier-audit
-    backstage.io/managed-by-location: url:https://github.com/giovanemere/demo-infra-ai-agent/blob/main/catalog-info.yaml
-  links:
-    - url: https://github.com/giovanemere/demo-infra-ai-agent
-      title: Código Fuente
-      icon: github
-    - url: https://github.com/giovanemere/demo-infra-ai-agent-template-idp
-      title: Templates Repository
-      icon: github
-    - url: http://localhost:8000/docs
-      title: API Documentation
-      icon: docs
-spec:
-  owner: platform-team
-  domain: platform-engineering
----
-apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: infra-ai-agent-api
-  title: "Infra AI Agent API"
-  description: "API FastAPI para procesamiento de diagramas y texto de arquitecturas AWS"
+  name: ai-agent
+  title: Infrastructure AI Agent
+  description: AI Agent for processing infrastructure descriptions using Gemini API
   tags:
-    - fastapi
-    - python
     - ai
+    - backend
+    - python
+    - fastapi
     - gemini
-    - api
   annotations:
     github.com/project-slug: giovanemere/demo-infra-ai-agent
-    ai-agent.com/model: gemini-1.5-pro
-    ai-agent.com/capabilities: vision,text,yaml-generation
-    aws.com/cost-center: free-tier-audit
-  links:
-    - url: http://localhost:8000
-      title: API Endpoint
-      icon: api
-    - url: http://localhost:8000/docs
-      title: Swagger UI
-      icon: docs
-    - url: http://localhost:8000/redoc
-      title: ReDoc
-      icon: docs
+    backstage.io/techdocs-ref: dir:.
 spec:
   type: service
   lifecycle: production
-  owner: platform-team
-  system: infra-ai-agent-system
+  owner: group:default/developers
+  system: infrastructure-ai-platform
   providesApis:
-    - architecture-analysis-api
+    - ai-agent-api
   dependsOn:
-    - component:default/vision-processor
-    - component:default/text-processor
-    - component:default/yaml-generator
-    - component:default/git-client
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
-  name: vision-processor
-  title: "Vision Processor"
-  description: "Procesador de imágenes usando Gemini Vision API para análisis de diagramas AWS"
-  tags:
-    - gemini
-    - vision
-    - image-processing
-    - ai
-  annotations:
-    ai-agent.com/model: gemini-1.5-pro
-    ai-agent.com/input-type: image/png
-    ai-agent.com/output-type: yaml
-    aws.com/cost-center: free-tier-audit
-spec:
-  type: library
-  lifecycle: production
-  owner: platform-team
-  system: infra-ai-agent-system
-  consumesApis:
-    - gemini-vision-api
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
-  name: text-processor
-  title: "Text Processor"
-  description: "Procesador de texto usando Gemini API para análisis de descripciones de arquitectura"
-  tags:
-    - gemini
-    - text-processing
-    - nlp
-    - ai
-  annotations:
-    ai-agent.com/model: gemini-1.5-pro
-    ai-agent.com/input-type: text/plain
-    ai-agent.com/output-type: yaml
-    aws.com/cost-center: free-tier-audit
-spec:
-  type: library
-  lifecycle: production
-  owner: platform-team
-  system: infra-ai-agent-system
-  consumesApis:
-    - gemini-text-api
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
-  name: yaml-generator
-  title: "YAML Generator"
-  description: "Generador de archivos catalog-info.yaml válidos para Backstage"
-  tags:
-    - yaml
-    - backstage
-    - generator
-    - validation
-  annotations:
-    backstage.io/schema-version: v1alpha1
-    ai-agent.com/output-format: backstage-catalog
-    aws.com/cost-center: free-tier-audit
-spec:
-  type: library
-  lifecycle: production
-  owner: platform-team
-  system: infra-ai-agent-system
-  dependsOn:
-    - component:default/backstage-validator
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
-  name: backstage-validator
-  title: "Backstage Validator"
-  description: "Validador de esquemas YAML para Backstage con reportes detallados"
-  tags:
-    - validation
-    - backstage
-    - yaml
-    - schema
-  annotations:
-    backstage.io/schema-version: v1alpha1
-    ai-agent.com/validation-level: strict
-    aws.com/cost-center: free-tier-audit
-spec:
-  type: library
-  lifecycle: production
-  owner: platform-team
-  system: infra-ai-agent-system
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
-  name: git-client
-  title: "Git Client"
-  description: "Cliente Git para automatizar commits al repositorio de templates"
-  tags:
-    - git
-    - automation
-    - github
-    - integration
-  annotations:
-    github.com/target-repo: giovanemere/demo-infra-ai-agent-template-idp
-    ai-agent.com/auto-commit: "true"
-    aws.com/cost-center: free-tier-audit
-spec:
-  type: library
-  lifecycle: production
-  owner: platform-team
-  system: infra-ai-agent-system
-  dependsOn:
-    - resource:default/templates-repository
----
-apiVersion: backstage.io/v1alpha1
-kind: Resource
-metadata:
-  name: templates-repository
-  title: "Templates Repository"
-  description: "Repositorio GitHub para almacenar YAMLs generados por el agente IA"
-  tags:
-    - github
-    - repository
-    - templates
-    - storage
-  annotations:
-    github.com/project-slug: giovanemere/demo-infra-ai-agent-template-idp
-    ai-agent.com/target-path: components/
-    aws.com/cost-center: free-tier-audit
-  links:
-    - url: https://github.com/giovanemere/demo-infra-ai-agent-template-idp
-      title: Repository
-      icon: github
-spec:
-  type: repository
-  owner: platform-team
-  system: infra-ai-agent-system
+    - resource:default/gemini-api
+    - resource:default/postgresql
 ---
 apiVersion: backstage.io/v1alpha1
 kind: API
 metadata:
-  name: architecture-analysis-api
-  title: "Architecture Analysis API"
-  description: "API REST para análisis de arquitecturas AWS y generación de catálogos Backstage"
+  name: ai-agent-api
+  description: REST API for AI-powered infrastructure analysis
   tags:
     - rest
-    - openapi
-    - architecture
-    - analysis
-  annotations:
-    ai-agent.com/version: "1.0.0"
-    ai-agent.com/endpoints: "/process-diagram,/process-text,/analyze-architecture"
-    aws.com/cost-center: free-tier-audit
-  links:
-    - url: http://localhost:8000/docs
-      title: OpenAPI Spec
-      icon: docs
+    - ai
+    - infrastructure
 spec:
   type: openapi
   lifecycle: production
-  owner: platform-team
-  system: infra-ai-agent-system
+  owner: group:default/developers
+  system: infrastructure-ai-platform
   definition: |
     openapi: 3.0.0
     info:
-      title: Architecture Analysis API
-      description: API para análisis automático de arquitecturas AWS
+      title: AI Agent API
       version: 1.0.0
-      contact:
-        name: Platform Team
-        email: platform@company.com
+      description: API for processing infrastructure descriptions with AI
     servers:
       - url: http://localhost:8000
         description: Development server
     paths:
-      /process-diagram:
-        post:
-          summary: Procesa diagrama PNG de arquitectura AWS
-          description: Analiza un diagrama PNG usando Gemini Vision y genera YAML para Backstage
-          tags:
-            - Analysis
-          requestBody:
-            required: true
-            content:
-              multipart/form-data:
-                schema:
-                  type: object
-                  properties:
-                    file:
-                      type: string
-                      format: binary
-                      description: Archivo PNG del diagrama de arquitectura
-                  required:
-                    - file
-          responses:
-            '200':
-              description: Análisis exitoso
-              content:
-                application/json:
-                  schema:
-                    type: object
-                    properties:
-                      status:
-                        type: string
-                        example: success
-                      yaml_content:
-                        type: string
-                        description: YAML generado para Backstage
-                      github_url:
-                        type: string
-                        description: URL del archivo en GitHub
-                      type:
-                        type: string
-                        example: diagram
-            '400':
-              description: Error en la solicitud
-            '500':
-              description: Error interno del servidor
       /process-text:
         post:
-          summary: Procesa descripción textual de arquitectura
-          description: Analiza descripción de texto y genera YAML para Backstage
-          tags:
-            - Analysis
-          requestBody:
-            required: true
-            content:
-              application/x-www-form-urlencoded:
-                schema:
-                  type: object
-                  properties:
-                    description:
-                      type: string
-                      description: Descripción textual de la arquitectura AWS
-                  required:
-                    - description
-          responses:
-            '200':
-              description: Análisis exitoso
-              content:
-                application/json:
-                  schema:
-                    type: object
-                    properties:
-                      status:
-                        type: string
-                        example: success
-                      yaml_content:
-                        type: string
-                      github_url:
-                        type: string
-                      type:
-                        type: string
-                        example: text
-      /analyze-architecture:
-        post:
-          summary: Análisis completo de arquitectura (nuevo endpoint mejorado)
-          description: Endpoint avanzado para análisis completo con metadatos y opciones
-          tags:
-            - Analysis
+          summary: Process text description
+          description: Analyze infrastructure description and generate Backstage YAML
           requestBody:
             required: true
             content:
@@ -338,51 +59,12 @@ spec:
                 schema:
                   type: object
                   properties:
-                    type:
+                    description:
                       type: string
-                      enum: [diagram, text, hybrid]
-                    content:
-                      type: object
-                      properties:
-                        image:
-                          type: string
-                          description: Imagen codificada en base64
-                        description:
-                          type: string
-                        context:
-                          type: string
-                    metadata:
-                      type: object
-                      properties:
-                        project_name:
-                          type: string
-                        environment:
-                          type: string
-                          enum: [production, staging, development]
-                        cost_center:
-                          type: string
-                        owner:
-                          type: string
-                        domain:
-                          type: string
-                        tags:
-                          type: array
-                          items:
-                            type: string
-                    options:
-                      type: object
-                      properties:
-                        generate_system:
-                          type: boolean
-                        include_dependencies:
-                          type: boolean
-                        validate_strict:
-                          type: boolean
-                        auto_commit:
-                          type: boolean
+                      description: Infrastructure description text
           responses:
             '200':
-              description: Análisis completo exitoso
+              description: Successful processing
               content:
                 application/json:
                   schema:
@@ -390,111 +72,24 @@ spec:
                     properties:
                       status:
                         type: string
-                      request_id:
+                      yaml_content:
                         type: string
-                      analysis:
-                        type: object
-                        properties:
-                          components_detected:
-                            type: integer
-                          services_identified:
-                            type: array
-                            items:
-                              type: string
-                          architecture_type:
-                            type: string
-                          complexity_score:
-                            type: number
-                      generated_artifacts:
-                        type: object
-                        properties:
-                          yaml_content:
-                            type: string
-                          components_count:
-                            type: integer
-                          resources_count:
-                            type: integer
-                      repository:
-                        type: object
-                        properties:
-                          commit_url:
-                            type: string
-                          file_url:
-                            type: string
-                      validation:
-                        type: object
-                        properties:
-                          yaml_valid:
-                            type: boolean
-                          backstage_schema_valid:
-                            type: boolean
-                          warnings:
-                            type: array
-                            items:
-                              type: string
-                          errors:
-                            type: array
-                            items:
-                              type: string
-      /health:
-        get:
-          summary: Health check
-          description: Verifica el estado del servicio
-          tags:
-            - Health
+                      project_id:
+                        type: string
+      /process-image:
+        post:
+          summary: Process image
+          description: Analyze infrastructure diagram and generate Backstage YAML
+          requestBody:
+            required: true
+            content:
+              multipart/form-data:
+                schema:
+                  type: object
+                  properties:
+                    image:
+                      type: string
+                      format: binary
           responses:
             '200':
-              description: Servicio saludable
-              content:
-                application/json:
-                  schema:
-                    type: object
-                    properties:
-                      status:
-                        type: string
-                        example: healthy
-                      version:
-                        type: string
-                        example: "1.0.0"
----
-apiVersion: backstage.io/v1alpha1
-kind: API
-metadata:
-  name: gemini-vision-api
-  title: "Gemini Vision API"
-  description: "API externa de Google Gemini para procesamiento de imágenes"
-  tags:
-    - external
-    - google
-    - ai
-    - vision
-  annotations:
-    ai-agent.com/provider: google
-    ai-agent.com/model: gemini-1.5-pro
-    aws.com/cost-center: free-tier-audit
-spec:
-  type: openapi
-  lifecycle: production
-  owner: external-provider
-  system: infra-ai-agent-system
----
-apiVersion: backstage.io/v1alpha1
-kind: API
-metadata:
-  name: gemini-text-api
-  title: "Gemini Text API"
-  description: "API externa de Google Gemini para procesamiento de texto"
-  tags:
-    - external
-    - google
-    - ai
-    - nlp
-  annotations:
-    ai-agent.com/provider: google
-    ai-agent.com/model: gemini-1.5-pro
-    aws.com/cost-center: free-tier-audit
-spec:
-  type: openapi
-  lifecycle: production
-  owner: external-provider
-  system: infra-ai-agent-system
+              description: Successful processing

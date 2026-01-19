@@ -1,0 +1,11 @@
+site_name: 'AI Agent Documentation'
+site_description: 'Infrastructure AI Agent - Complete Documentation'
+
+nav:
+  - Home: index.md
+  - Architecture: architecture.md
+  - API Reference: api.md
+  - Configuration: configuration.md
+
+plugins:
+  - techdocs-core
