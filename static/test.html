@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Config</title>
+</head>
+<body>
+    <h1>Test de Configuración</h1>
+    <button onclick="testConfig()">Probar Configuración</button>
+    <div id="result"></div>
+
+    <script>
+        async function testConfig() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = 'Cargando...';
+            
+            try {
+                const response = await fetch('http://localhost:8000/api/config/github');
+                const result = await response.json();
+                
+                resultDiv.innerHTML = `
+                    <h3>Resultado:</h3>
+                    <pre>${JSON.stringify(result, null, 2)}</pre>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `Error: ${error.message}`;
+            }
+        }
+    </script>
+</body>
+</html>

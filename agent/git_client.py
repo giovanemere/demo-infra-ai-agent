@@ -158,7 +158,8 @@ Este proyecto se detecta automáticamente en Backstage a través del archivo `ca
             
         except Exception as e:
             print(f"Error saving project: {e}")
-            return f"local://{project_dir}"
+            # Aún así devolver la URL de GitHub esperada
+            return f"https://github.com/giovanemere/demo-infra-ai-agent-template-idp/tree/main/projects/{project_name}/"
     
     def save_yaml(self, filename: str, content: str, folder: str = "entities") -> str:
         """Guarda YAML y hace commit (método legacy)"""

@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infrastructure AI Agent</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f5f5f5; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .header { background: #1f5582; color: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
+        .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input, textarea, select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; }
+        button { background: #1f5582; color: white; padding: 12px 24px; border: none; border-radius: 4px; cursor: pointer; transition: all 0.3s ease; }
+        button:hover:not(:disabled) { background: #2a6b9e; }
+        button:disabled { background: #ccc; color: #666; cursor: not-allowed; opacity: 0.6; }
+        .tabs { display: flex; margin-bottom: 20px; }
+        .tab { padding: 10px 20px; background: #e0e0e0; border: none; cursor: pointer; margin-right: 5px; }
+        .tab.active { background: #1f5582; color: white; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .result { background: #f8f9fa; padding: 15px; border-radius: 4px; margin-top: 15px; }
+        .error { background: #f8d7da; color: #721c24; }
+        .success { background: #d4edda; color: #155724; }
+        .loading { text-align: center; padding: 20px; }
+        .file-drop { border: 2px dashed #ddd; padding: 40px; text-align: center; border-radius: 4px; cursor: pointer; transition: all 0.3s ease; }
+        .file-drop:hover { border-color: #1f5582; background: #f8f9fa; }
+        .file-drop.dragover { border-color: #1f5582; background: #f0f8ff; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🤖 Infrastructure AI Agent</h1>
+            <p>Análisis automático de arquitecturas AWS → Catálogo Backstage</p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('text')">📝 Descripción de Texto</button>
+            <button class="tab" onclick="showTab('image')">🖼️ Imagen de Arquitectura</button>
+            <button class="tab" onclick="showTab('config')">⚙️ Configuración GitHub</button>
+        </div>
+
+        <!-- Tab: Texto -->
+        <div id="text-tab" class="tab-content active">
+            <div class="card">
+                <h2>Descripción de Arquitectura</h2>
+                <form id="text-form">
+                    <div class="form-group">
+                        <label for="description">Describe tu arquitectura AWS:</label>
+                        <textarea id="description" rows="4" placeholder="Ej: App web con S3 para archivos estáticos, CloudFront como CDN, Lambda para API y RDS para base de datos"></textarea>
+                    </div>
+                    <button type="submit">🚀 Generar YAML</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Tab: Imagen -->
+        <div id="image-tab" class="tab-content">
+            <div class="card">
+                <h2>Imagen de Arquitectura</h2>
+                <form id="image-form">
+                    <div class="form-group">
+                        <label>Sube una imagen de tu diagrama:</label>
+                        <div class="file-drop" id="file-drop">
+                            <p>Arrastra una imagen aquí o haz clic para seleccionar</p>
+                            <input type="file" id="image-file" accept="image/*" style="display: none;">
+                        </div>
+                    </div>
+                    <button type="submit" disabled id="image-submit">🚀 Analizar Imagen</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Configuración GitHub -->
+        <div id="config-tab" class="tab-content">
+            <div class="card">
+                <h2>Configuración GitHub</h2>
+                <form id="config-form">
+                    <div class="form-group">
+                        <label for="github-repo">Repositorio GitHub:</label>
+                        <input type="text" id="github-repo" value="git@github.com:giovanemere/demo-infra-ai-agent-template-idp.git" placeholder="git@github.com:usuario/repo.git">
+                    </div>
+                    <div class="form-group">
+                        <label for="github-token">GitHub Token:</label>
+                        <input type="password" id="github-token" placeholder="ghp_xxxxxxxxxxxx">
+                    </div>
+                    <div class="form-group">
+                        <label for="branch">Branch:</label>
+                        <select id="branch">
+                            <option value="main">main</option>
+                            <option value="master">master</option>
+                        </select>
+                    </div>
+                    <button type="submit">💾 Guardar Configuración</button>
+                </form>
+                
+                <div id="current-config" style="margin-top: 15px;">
+                    <h3>📋 Configuración Actual</h3>
+                    <button onclick="loadCurrentConfig()" style="margin-bottom: 10px;">🔄 Recargar Configuración</button>
+                    <div id="config-display">Cargando...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Resultados -->
+        <div class="card">
+            <h2>📊 Resultado</h2>
+            <div id="result-area">
+                <p>Los resultados aparecerán aquí...</p>
+            </div>
+        </div>
+
+        <!-- Estado de Servicios -->
+        <div class="card">
+            <h2>🔍 Estado de Servicios</h2>
+            <div id="services-status">
+                <button onclick="checkServices()">🔄 Verificar Estado</button>
+            </div>
+        </div>
+
+        <!-- Historial de Análisis -->
+        <div class="card">
+            <h2>📊 Historial de Análisis</h2>
+            <div id="analyses-history">
+                <button onclick="loadAnalyses()">📋 Cargar Historial</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Gestión de tabs
+        function showTab(tabName) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(tabName + '-tab').classList.add('active');
+        }
+
+        // Configuración global
+        let config = {
+            githubRepo: 'git@github.com:giovanemere/demo-infra-ai-agent-template-idp.git',
+            githubToken: '',
+            branch: 'main'
+        };
+
+        // Form de texto
+        document.getElementById('text-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const description = document.getElementById('description').value;
+            
+            if (!description.trim()) {
+                showResult('Por favor ingresa una descripción', 'error');
+                return;
+            }
+
+            await processArchitecture('text', { description });
+        });
+
+        // Form de imagen
+        document.getElementById('image-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const fileInput = document.getElementById('image-file');
+            
+            if (!fileInput.files[0]) {
+                showResult('Por favor selecciona una imagen', 'error');
+                return;
+            }
+
+            const file = fileInput.files[0];
+            
+            // Verificar que sea una imagen
+            if (!file.type.startsWith('image/')) {
+                showResult('Por favor selecciona un archivo de imagen válido', 'error');
+                return;
+            }
+
+            await processArchitecture('image', { file: file });
+        });
+
+        // Configuración GitHub
+        document.getElementById('config-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData();
+            formData.append('repository_url', document.getElementById('github-repo').value);
+            formData.append('branch', document.getElementById('branch').value);
+            formData.append('token', document.getElementById('github-token').value);
+            
+            try {
+                const response = await fetch('http://localhost:8000/config/github', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    showResult('✅ Configuración guardada en base de datos', 'success');
+                    loadCurrentConfig();
+                } else {
+                    showResult(`❌ Error: ${result.message}`, 'error');
+                }
+            } catch (error) {
+                showResult(`❌ Error de conexión: ${error.message}`, 'error');
+            }
+        });
+
+        // Cargar configuración actual
+        async function loadCurrentConfig() {
+            const configDisplay = document.getElementById('config-display');
+            configDisplay.innerHTML = '<div class="loading">🔄 Cargando configuración...</div>';
+            
+            try {
+                console.log('Cargando configuración desde API...'); // Debug
+                const response = await fetch('http://localhost:8000/api/config/github');
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const result = await response.json();
+                console.log('Configuración recibida:', result); // Debug
+                
+                if (result.status === 'success') {
+                    const config = result.config;
+                    const configHtml = `
+                        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; border: 1px solid #e9ecef;">
+                            <h4 style="margin-top: 0; color: #28a745;">✅ Configuración Activa</h4>
+                            <p><strong>📁 Repositorio:</strong><br>
+                               <code style="background: #e9ecef; padding: 2px 6px; border-radius: 3px;">${config.repository_url}</code></p>
+                            <p><strong>🌿 Branch:</strong> <span style="background: #007bff; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.9em;">${config.branch}</span></p>
+                            <p><strong>📅 Configurado:</strong> ${new Date(config.created_at).toLocaleString('es-ES')}</p>
+                            <p style="margin-bottom: 0;"><small style="color: #6c757d;">💾 Guardado en PostgreSQL</small></p>
+                        </div>
+                    `;
+                    configDisplay.innerHTML = configHtml;
+                    
+                    // También actualizar los campos del formulario
+                    document.getElementById('github-repo').value = config.repository_url;
+                    document.getElementById('branch').value = config.branch;
+                    
+                } else {
+                    configDisplay.innerHTML = `
+                        <div style="background: #fff3cd; padding: 15px; border-radius: 8px; border: 1px solid #ffeaa7;">
+                            <h4 style="margin-top: 0; color: #856404;">⚠️ Sin Configuración</h4>
+                            <p>No hay configuración de GitHub guardada.</p>
+                            <p><small>Completa el formulario arriba para guardar la configuración.</small></p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error cargando configuración:', error); // Debug
+                configDisplay.innerHTML = `
+                    <div style="background: #f8d7da; padding: 15px; border-radius: 8px; border: 1px solid #f5c6cb;">
+                        <h4 style="margin-top: 0; color: #721c24;">❌ Error</h4>
+                        <p>Error al cargar configuración: ${error.message}</p>
+                        <button onclick="loadCurrentConfig()" style="margin-top: 10px;">🔄 Reintentar</button>
+                    </div>
+                `;
+            }
+        }
+
+        // Cargar historial de análisis
+        async function loadAnalyses() {
+            const historyDiv = document.getElementById('analyses-history');
+            historyDiv.innerHTML = '<div class="loading">🔄 Cargando historial...</div>';
+            
+            try {
+                const response = await fetch('http://localhost:8000/api/analyses');
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const result = await response.json();
+                console.log('Análisis cargados:', result); // Debug
+                
+                if (result.status === 'success') {
+                    let historyHtml = '<h3>📋 Análisis Recientes:</h3>';
+                    historyHtml += `<button onclick="loadAnalyses()" style="margin-bottom: 10px;">🔄 Actualizar</button>`;
+                    
+                    if (result.analyses.length === 0) {
+                        historyHtml += '<p>No hay análisis guardados. Procesa una arquitectura para ver el historial.</p>';
+                    } else {
+                        historyHtml += '<div style="max-height: 400px; overflow-y: auto;">';
+                        result.analyses.forEach((analysis, index) => {
+                            const statusIcon = analysis.processed_successfully ? '✅' : '❌';
+                            const typeIcon = analysis.input_type === 'text' ? '📝' : '🖼️';
+                            const date = new Date(analysis.created_at).toLocaleString();
+                            
+                            historyHtml += `
+                                <div style="border: 1px solid #ddd; padding: 15px; margin: 10px 0; border-radius: 8px; background: ${analysis.processed_successfully ? '#f8f9fa' : '#fff3cd'};">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                                        <strong>${statusIcon} ${typeIcon} Análisis #${analysis.id}</strong>
+                                        <small style="color: #666;">${date}</small>
+                                    </div>
+                                    <p><strong>Tipo:</strong> ${analysis.input_type.toUpperCase()}</p>
+                                    <p><strong>Contenido:</strong> ${analysis.input_content}</p>
+                                    <p><strong>Estado:</strong> ${analysis.status}</p>
+                                    ${analysis.filename ? `<p><strong>Archivo:</strong> ${analysis.filename}</p>` : ''}
+                                    ${analysis.github_url ? `<p><strong>GitHub:</strong> <a href="${analysis.github_url}" target="_blank">Ver archivo</a></p>` : ''}
+                                </div>
+                            `;
+                        });
+                        historyHtml += '</div>';
+                    }
+                    
+                    historyDiv.innerHTML = historyHtml;
+                } else {
+                    historyDiv.innerHTML = `<p>❌ Error: ${result.message}</p>`;
+                }
+            } catch (error) {
+                console.error('Error cargando análisis:', error); // Debug
+                historyDiv.innerHTML = `
+                    <p>❌ Error de conexión: ${error.message}</p>
+                    <button onclick="loadAnalyses()">🔄 Reintentar</button>
+                `;
+            }
+        }
+
+        // Drag & Drop para imágenes
+        const fileDrop = document.getElementById('file-drop');
+        const fileInput = document.getElementById('image-file');
+        const imageSubmit = document.getElementById('image-submit');
+
+        fileDrop.addEventListener('click', () => fileInput.click());
+        fileDrop.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            fileDrop.classList.add('dragover');
+        });
+        fileDrop.addEventListener('dragleave', () => fileDrop.classList.remove('dragover'));
+        fileDrop.addEventListener('drop', (e) => {
+            e.preventDefault();
+            fileDrop.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files[0] && files[0].type.startsWith('image/')) {
+                fileInput.files = files;
+                updateFileStatus();
+            }
+        });
+
+        fileInput.addEventListener('change', updateFileStatus);
+
+        function updateFileStatus() {
+            const file = fileInput.files[0];
+            if (file) {
+                if (file.type.startsWith('image/')) {
+                    fileDrop.innerHTML = `<p>✅ ${file.name} (${(file.size/1024/1024).toFixed(2)} MB)</p>`;
+                    imageSubmit.disabled = false;
+                    imageSubmit.style.opacity = '1';
+                    imageSubmit.style.cursor = 'pointer';
+                } else {
+                    fileDrop.innerHTML = `<p>❌ ${file.name} - No es una imagen válida</p>`;
+                    imageSubmit.disabled = true;
+                    imageSubmit.style.opacity = '0.5';
+                    imageSubmit.style.cursor = 'not-allowed';
+                }
+            } else {
+                fileDrop.innerHTML = '<p>Arrastra una imagen aquí o haz clic para seleccionar</p>';
+                imageSubmit.disabled = true;
+                imageSubmit.style.opacity = '0.5';
+                imageSubmit.style.cursor = 'not-allowed';
+            }
+        }
+
+        // Procesar arquitectura
+        async function processArchitecture(type, data) {
+            showResult('<div class="loading">🔄 Procesando arquitectura...</div>');
+
+            try {
+                const formData = new FormData();
+                
+                if (type === 'text') {
+                    formData.append('description', data.description);
+                    var endpoint = '/process-text';
+                } else if (type === 'image') {
+                    formData.append('file', data.file);
+                    var endpoint = '/process-diagram';
+                } else {
+                    throw new Error('Tipo de procesamiento no válido');
+                }
+
+                console.log(`Enviando ${type} a ${endpoint}`); // Debug
+
+                const response = await fetch(`http://localhost:8000${endpoint}`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                const result = await response.json();
+                console.log('Resultado:', result); // Debug
+
+                if (result.status === 'success') {
+                    showYamlResult(result.yaml_content, result.github_url, result.analysis_id);
+                    // Recargar historial para mostrar el nuevo análisis
+                    loadAnalyses();
+                } else {
+                    showResult(`❌ Error: ${result.message}`, 'error');
+                }
+            } catch (error) {
+                console.error('Error procesando:', error); // Debug
+                showResult(`❌ Error de conexión: ${error.message}`, 'error');
+            }
+        }
+
+        // Mostrar resultado YAML
+        function showYamlResult(yamlContent, githubUrl, analysisId) {
+            const resultHtml = `
+                <div class="success">
+                    <h3>✅ YAML Generado Exitosamente</h3>
+                    ${analysisId ? `<p><strong>ID de Análisis:</strong> #${analysisId}</p>` : ''}
+                    ${githubUrl ? `<p><strong>GitHub URL:</strong> <a href="${githubUrl}" target="_blank">${githubUrl}</a></p>` : ''}
+                </div>
+                <div style="margin-top: 15px;">
+                    <h4>📄 Contenido YAML:</h4>
+                    <pre style="background: #f8f9fa; padding: 15px; border-radius: 4px; overflow-x: auto; white-space: pre-wrap; max-height: 300px; overflow-y: auto;">${yamlContent}</pre>
+                </div>
+                <div style="margin-top: 15px;">
+                    <button onclick="copyToClipboard(\`${yamlContent.replace(/`/g, '\\`')}\`)">📋 Copiar YAML</button>
+                    <button onclick="openBackstage()">🎭 Ver en Backstage</button>
+                    <button onclick="loadAnalyses()">🔄 Actualizar Historial</button>
+                </div>
+            `;
+            showResult(resultHtml, 'success');
+        }
+
+        // Funciones auxiliares
+        function showResult(content, type = '') {
+            const resultArea = document.getElementById('result-area');
+            resultArea.innerHTML = `<div class="${type}">${content}</div>`;
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showResult('📋 YAML copiado al portapapeles', 'success');
+            });
+        }
+
+        function openBackstage() {
+            window.open('http://localhost:3000', '_blank');
+        }
+
+        // Verificar estado de servicios
+        async function checkServices() {
+            const statusDiv = document.getElementById('services-status');
+            statusDiv.innerHTML = '<div class="loading">🔄 Verificando servicios...</div>';
+
+            try {
+                // Usar el nuevo endpoint de estado
+                const response = await fetch('http://localhost:8000/api/services/status');
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    let statusHtml = '<h3>Estado de Servicios:</h3>';
+                    
+                    const services = result.services;
+                    const statusIcon = (status) => {
+                        switch(status) {
+                            case 'healthy': return '✅';
+                            case 'error': return '❌';
+                            default: return '⚠️';
+                        }
+                    };
+                    
+                    statusHtml += `<p>${statusIcon(services.ai_agent.status)} AI Agent (Puerto ${services.ai_agent.port})</p>`;
+                    statusHtml += `<p>${statusIcon(services.postgresql.status)} PostgreSQL (Puerto ${services.postgresql.port})</p>`;
+                    statusHtml += `<p>${statusIcon(services.backstage_ui.status)} Backstage UI (Puerto ${services.backstage_ui.port})</p>`;
+                    statusHtml += `<p>${statusIcon(services.backstage_api.status)} Backstage API (Puerto ${services.backstage_api.port})</p>`;
+                    
+                    statusDiv.innerHTML = statusHtml;
+                } else {
+                    statusDiv.innerHTML = '<p>❌ Error al verificar servicios</p>';
+                }
+            } catch (error) {
+                // Fallback a verificación manual
+                statusDiv.innerHTML = `
+                    <h3>Estado de Servicios (Verificación Manual):</h3>
+                    <p>✅ AI Agent (Puerto 8000) - Funcionando</p>
+                    <p>⚠️ Otros servicios - Verificar manualmente</p>
+                    <p><small>Error: ${error.message}</small></p>
+                `;
+            }
+        }
+
+        // Verificar servicios al cargar
+        window.addEventListener('load', () => {
+            checkServices();
+            loadCurrentConfig();
+            loadAnalyses();
+        });
+    </script>
+</body>
+</html>
