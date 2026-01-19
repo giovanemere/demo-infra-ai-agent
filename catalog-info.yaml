@@ -1,0 +1,46 @@
+apiVersion: backstage.io/v1alpha1
+kind: Location
+metadata:
+  name: infrastructure-ai-templates
+  description: Infrastructure AI Platform Templates
+  annotations:
+    backstage.io/managed-by-location: url:https://github.com/giovanemere/demo-infra-ai-agent-template-idp/blob/main/catalog-info.yaml
+spec:
+  targets:
+    - ./templates/**/*.yaml
+    - ./entities/**/*.yaml
+    - ./components/**/*.yaml
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: infrastructure-ai-platform
+  description: AI-powered infrastructure analysis and template generation
+spec:
+  owner: developers
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: ai-agent
+  description: AI Agent for processing infrastructure descriptions
+  annotations:
+    github.com/project-slug: giovanemere/demo-infra-ai-agent
+spec:
+  type: service
+  lifecycle: production
+  owner: developers
+  system: infrastructure-ai-platform
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: backstage-idp
+  description: Backstage Internal Developer Platform
+  annotations:
+    github.com/project-slug: giovanemere/demo-infra-backstage
+spec:
+  type: website
+  lifecycle: production
+  owner: developers
+  system: infrastructure-ai-platform

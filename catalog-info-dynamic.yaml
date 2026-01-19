@@ -1,0 +1,120 @@
+apiVersion: backstage.io/v1alpha1
+kind: Location
+metadata:
+  name: infrastructure-ai-templates
+  description: Infrastructure AI Platform Templates - Dynamic Discovery
+  annotations:
+    backstage.io/managed-by-location: url:https://github.com/giovanemere/demo-infra-ai-agent-template-idp/blob/main/catalog-info.yaml
+spec:
+  targets:
+    # Escanear todas las carpetas dinámicamente
+    - ./templates/**/*.yaml
+    - ./entities/**/*.yaml  
+    - ./components/**/*.yaml
+    - ./projects/**/catalog-info.yaml
+    - ./projects/**/backstage.yaml
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: infrastructure-ai-platform
+  description: AI-powered infrastructure analysis and template generation
+  tags:
+    - ai
+    - infrastructure
+    - platform
+spec:
+  owner: developers
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: ai-agent
+  description: AI Agent for processing infrastructure descriptions
+  annotations:
+    github.com/project-slug: giovanemere/demo-infra-ai-agent
+    backstage.io/techdocs-ref: dir:.
+  tags:
+    - ai
+    - backend
+    - python
+spec:
+  type: service
+  lifecycle: production
+  owner: developers
+  system: infrastructure-ai-platform
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: backstage-idp
+  description: Backstage Internal Developer Platform
+  annotations:
+    github.com/project-slug: giovanemere/demo-infra-backstage
+    backstage.io/techdocs-ref: dir:.
+  tags:
+    - platform
+    - frontend
+    - typescript
+spec:
+  type: website
+  lifecycle: production
+  owner: developers
+  system: infrastructure-ai-platform
+---
+# Template para generar proyectos dinámicamente
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: ai-infrastructure-project
+  title: AI Infrastructure Project
+  description: Generate infrastructure projects using AI analysis
+  tags:
+    - ai
+    - infrastructure
+    - template
+spec:
+  owner: developers
+  type: service
+  parameters:
+    - title: Project Information
+      required:
+        - name
+        - description
+      properties:
+        name:
+          title: Name
+          type: string
+          description: Unique name for the project
+        description:
+          title: Description
+          type: string
+          description: Description of the infrastructure project
+        owner:
+          title: Owner
+          type: string
+          description: Owner of the project
+          default: developers
+  steps:
+    - id: fetch
+      name: Fetch Template
+      action: fetch:template
+      input:
+        url: ./templates/ai-project
+        values:
+          name: ${{ parameters.name }}
+          description: ${{ parameters.description }}
+          owner: ${{ parameters.owner }}
+    - id: publish
+      name: Publish to GitHub
+      action: publish:github
+      input:
+        allowedHosts: ['github.com']
+        description: ${{ parameters.description }}
+        repoUrl: github.com?owner=giovanemere&repo=${{ parameters.name }}
+    - id: register
+      name: Register in Catalog
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
+        catalogInfoPath: '/catalog-info.yaml'
