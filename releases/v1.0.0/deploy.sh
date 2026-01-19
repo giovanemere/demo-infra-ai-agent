@@ -1,4 +1,24 @@
 #!/bin/bash
+
+# Auto-load environment variables
+if [ -f ".env" ]; then
+    set -a
+    source .env
+    set +a
+elif [ -f "../backstage-idp/infra-ai-backstage/.env" ]; then
+    cd ../backstage-idp/infra-ai-backstage
+    set -a
+    source .env
+    set +a
+    cd - > /dev/null
+elif [ -f "backstage-idp/infra-ai-backstage/.env" ]; then
+    cd backstage-idp/infra-ai-backstage
+    set -a
+    source .env
+    set +a
+    cd - > /dev/null
+fi
+
 echo "🚀 Desplegando Infrastructure AI Platform v1.0.0"
 
 # Verificar prerequisites

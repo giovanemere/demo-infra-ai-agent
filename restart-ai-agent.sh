@@ -1,15 +1,32 @@
 #!/bin/bash
-# Reiniciar AI Agent
 echo "🔄 Reiniciando AI Agent..."
 
-# Detener proceso actual
-pkill -f uvicorn
+# Auto-load environment variables
+if [ -f ".env" ]; then
+    set -a; source .env; set +a
+elif [ -f "../backstage-idp/infra-ai-backstage/.env" ]; then
+    cd ../backstage-idp/infra-ai-backstage; set -a; source .env; set +a; cd - > /dev/null
+elif [ -f "backstage-idp/infra-ai-backstage/.env" ]; then
+    cd backstage-idp/infra-ai-backstage; set -a; source .env; set +a; cd - > /dev/null
+fi
+
+# Detener proceso existente
+pkill -f "python.*main.py" 2>/dev/null || true
+pkill -f "uvicorn" 2>/dev/null || true
 sleep 2
 
-# Iniciar nuevo proceso
+# Iniciar AI Agent
 cd /home/giovanemere/demos/infra-ai-agent
 source venv/bin/activate
-PYTHONPATH=/home/giovanemere/demos/infra-ai-agent nohup uvicorn agent.main:app --host 0.0.0.0 --port 8000 > ai-agent.log 2>&1 & 
-echo $! > ai-agent.pid
+cd agent
+nohup python main.py > ../ai-agent.log 2>&1 &
+echo $! > ../ai-agent.pid
 
-echo "✅ AI Agent reiniciado en puerto 8000"
+sleep 3
+
+# Verificar
+if curl -s http://localhost:8000/health > /dev/null; then
+    echo "✅ AI Agent reiniciado en :8000"
+else
+    echo "❌ Error reiniciando AI Agent"
+fi

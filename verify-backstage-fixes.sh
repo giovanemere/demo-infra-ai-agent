@@ -3,9 +3,11 @@
 echo "🔍 Verificando Solución de Problemas Backstage"
 echo "=============================================="
 
-# Cargar variables
+# Cargar variables correctamente
 cd /home/giovanemere/demos/backstage-idp/infra-ai-backstage
-export $(cat .env | grep -v '^#' | xargs)
+set -a
+source .env
+set +a
 
 echo ""
 echo "1️⃣ Verificando grupo 'developers'..."

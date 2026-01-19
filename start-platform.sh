@@ -41,10 +41,13 @@ start_ai_agent() {
         return 1
     fi
     
-    # Iniciar en background
-    ./start.sh &
+    # Iniciar AI Agent
+    cd infra-ai-agent/agent
+    source ../venv/bin/activate
+    nohup python main.py > ../ai-agent.log 2>&1 &
     AI_PID=$!
     echo $AI_PID > ../ai-agent.pid
+    cd ../..
     
     log_success "AI Agent iniciado (PID: $AI_PID)"
     cd ..
@@ -63,25 +66,30 @@ start_backstage() {
         cd /home/giovanemere/demos
     fi
     
-    cd backstage-idp
+    cd backstage-idp/infra-ai-backstage
     
-    if [ ! -d "infra-ai-backstage" ]; then
-        log_warning "Backstage no configurado. Ejecuta ./setup-backstage.sh primero"
-        return 1
-    fi
-    
-    if [ ! -f "infra-ai-backstage/.env" ]; then
+    if [ ! -f ".env" ]; then
         log_warning "Variables de entorno no configuradas en Backstage"
         return 1
     fi
     
+    # Detener procesos existentes
+    pkill -f "backstage-cli" 2>/dev/null || true
+    pkill -f "yarn start" 2>/dev/null || true
+    sleep 2
+    
+    # Cargar variables de entorno correctamente
+    set -a
+    source .env
+    set +a
+    
     # Iniciar en background
-    ./scripts/start-backstage.sh &
+    nohup yarn start > backstage.log 2>&1 &
     BS_PID=$!
-    echo $BS_PID > ../backstage.pid
+    echo $BS_PID > ../../backstage.pid
     
     log_success "Backstage iniciado (PID: $BS_PID)"
-    cd ..
+    cd ../..
 }
 
 # Función para verificar servicios
