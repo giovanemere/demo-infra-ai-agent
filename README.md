@@ -4,6 +4,18 @@
 
 ## 🚀 Inicio Rápido
 
+### Prerrequisitos
+📋 **[Ver Guía Completa de Prerrequisitos](docs/ai/prerequisites.md)**
+
+**Instalación rápida de MkDocs (REQUERIDO):**
+```bash
+sudo apt install -y pipx
+pipx install mkdocs
+pipx inject mkdocs mkdocs-material mkdocs-techdocs-core
+sudo ln -sf ~/.local/bin/mkdocs /usr/local/bin/mkdocs
+```
+
+### Inicio de la Plataforma
 ```bash
 # 1. Verificar prerequisitos
 ./task-runner.sh check
