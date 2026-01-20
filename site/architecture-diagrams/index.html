@@ -1,0 +1,1386 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Infrastructure AI Agent - Complete Documentation">
+      
+      
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>🏗️ Arquitectura Completa - Infrastructure AI Platform - AI Agent Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#arquitectura-completa-infrastructure-ai-platform" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="AI Agent Documentation" class="md-header__button md-logo" aria-label="AI Agent Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            AI Agent Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              🏗️ Arquitectura Completa - Infrastructure AI Platform
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="AI Agent Documentation" class="md-nav__button md-logo" aria-label="AI Agent Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    AI Agent Documentation
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#diagrama-principal-del-sistema-completo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Diagrama Principal del Sistema Completo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#estructura-completa-del-proyecto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Estructura Completa del Proyecto
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#flujo-de-datos-completo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Flujo de Datos Completo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#arquitectura-de-despliegue" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Arquitectura de Despliegue
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#flujo-de-procesamiento-detallado" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Flujo de Procesamiento Detallado
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#arquitectura-de-componentes-backstage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Arquitectura de Componentes Backstage
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mapeo-de-servicios-aws-a-backstage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mapeo de Servicios AWS a Backstage
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#estados-del-procesamiento" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Estados del Procesamiento
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="arquitectura-completa-infrastructure-ai-platform">🏗️ Arquitectura Completa - Infrastructure AI Platform<a class="headerlink" href="#arquitectura-completa-infrastructure-ai-platform" title="Permanent link">&para;</a></h1>
+<h2 id="diagrama-principal-del-sistema-completo">Diagrama Principal del Sistema Completo<a class="headerlink" href="#diagrama-principal-del-sistema-completo" title="Permanent link">&para;</a></h2>
+<div class="language-text highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">  1</span>
+<span class="normal">  2</span>
+<span class="normal">  3</span>
+<span class="normal">  4</span>
+<span class="normal">  5</span>
+<span class="normal">  6</span>
+<span class="normal">  7</span>
+<span class="normal">  8</span>
+<span class="normal">  9</span>
+<span class="normal"> 10</span>
+<span class="normal"> 11</span>
+<span class="normal"> 12</span>
+<span class="normal"> 13</span>
+<span class="normal"> 14</span>
+<span class="normal"> 15</span>
+<span class="normal"> 16</span>
+<span class="normal"> 17</span>
+<span class="normal"> 18</span>
+<span class="normal"> 19</span>
+<span class="normal"> 20</span>
+<span class="normal"> 21</span>
+<span class="normal"> 22</span>
+<span class="normal"> 23</span>
+<span class="normal"> 24</span>
+<span class="normal"> 25</span>
+<span class="normal"> 26</span>
+<span class="normal"> 27</span>
+<span class="normal"> 28</span>
+<span class="normal"> 29</span>
+<span class="normal"> 30</span>
+<span class="normal"> 31</span>
+<span class="normal"> 32</span>
+<span class="normal"> 33</span>
+<span class="normal"> 34</span>
+<span class="normal"> 35</span>
+<span class="normal"> 36</span>
+<span class="normal"> 37</span>
+<span class="normal"> 38</span>
+<span class="normal"> 39</span>
+<span class="normal"> 40</span>
+<span class="normal"> 41</span>
+<span class="normal"> 42</span>
+<span class="normal"> 43</span>
+<span class="normal"> 44</span>
+<span class="normal"> 45</span>
+<span class="normal"> 46</span>
+<span class="normal"> 47</span>
+<span class="normal"> 48</span>
+<span class="normal"> 49</span>
+<span class="normal"> 50</span>
+<span class="normal"> 51</span>
+<span class="normal"> 52</span>
+<span class="normal"> 53</span>
+<span class="normal"> 54</span>
+<span class="normal"> 55</span>
+<span class="normal"> 56</span>
+<span class="normal"> 57</span>
+<span class="normal"> 58</span>
+<span class="normal"> 59</span>
+<span class="normal"> 60</span>
+<span class="normal"> 61</span>
+<span class="normal"> 62</span>
+<span class="normal"> 63</span>
+<span class="normal"> 64</span>
+<span class="normal"> 65</span>
+<span class="normal"> 66</span>
+<span class="normal"> 67</span>
+<span class="normal"> 68</span>
+<span class="normal"> 69</span>
+<span class="normal"> 70</span>
+<span class="normal"> 71</span>
+<span class="normal"> 72</span>
+<span class="normal"> 73</span>
+<span class="normal"> 74</span>
+<span class="normal"> 75</span>
+<span class="normal"> 76</span>
+<span class="normal"> 77</span>
+<span class="normal"> 78</span>
+<span class="normal"> 79</span>
+<span class="normal"> 80</span>
+<span class="normal"> 81</span>
+<span class="normal"> 82</span>
+<span class="normal"> 83</span>
+<span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span></pre></div></td><td class="code"><div><pre><span></span><code>graph TB
+    subgraph &quot;Usuario/Cliente&quot;
+        USER[👤 Usuario]
+        DEV[👨‍💻 Developer]
+        ARCH[🏗️ Architect]
+    end
+
+    subgraph &quot;Backstage IDP Platform&quot;
+        subgraph &quot;Frontend - React App&quot;
+            UI[🖥️ Backstage UI&lt;br/&gt;Port: 3000]
+            CAT[📋 Service Catalog]
+            TEMP[📝 Templates]
+            DOCS[📚 TechDocs]
+        end
+
+        subgraph &quot;Backend - Node.js&quot;
+            API_BS[🔌 Backstage API&lt;br/&gt;Port: 7007]
+            PROC_BS[⚙️ Catalog Processor]
+            AUTH[🔐 Authentication]
+        end
+    end
+
+    subgraph &quot;Infra AI Agent - Core System&quot;
+        subgraph &quot;API Layer&quot;
+            FASTAPI[🚀 FastAPI Server&lt;br/&gt;Port: 8000]
+            ENDPOINTS[📍 Endpoints&lt;br/&gt;/process-diagram&lt;br/&gt;/process-text&lt;br/&gt;/analyze-architecture]
+        end
+
+        subgraph &quot;Processing Layer&quot;
+            VISION[👁️ Vision Processor&lt;br/&gt;Gemini Vision API]
+            TEXT[📝 Text Processor&lt;br/&gt;Gemini Text API]
+            ROUTER[🔀 Request Router]
+        end
+
+        subgraph &quot;AI Integration&quot;
+            GEMINI_V[🤖 Gemini Vision&lt;br/&gt;gemini-1.5-pro]
+            GEMINI_T[🤖 Gemini Text&lt;br/&gt;gemini-1.5-pro]
+            PROMPT_ENG[⚙️ Prompt Engineering]
+        end
+
+        subgraph &quot;Generation &amp; Validation&quot;
+            YAML_GEN[📄 YAML Generator]
+            VALIDATOR[✅ Backstage Validator]
+            MAPPER[🗺️ Service Mapper&lt;br/&gt;AWS → Backstage]
+        end
+
+        subgraph &quot;Integration Layer&quot;
+            GIT_CLIENT[📦 Git Client]
+            WEBHOOK[🔗 Webhook Handler]
+            METRICS[📊 Metrics Collector]
+        end
+    end
+
+    subgraph &quot;External Services&quot;
+        GOOGLE_AI[🌐 Google AI Platform&lt;br/&gt;Gemini APIs]
+        GITHUB[🐙 GitHub&lt;br/&gt;Repositories]
+    end
+
+    subgraph &quot;Storage &amp; Repositories&quot;
+        subgraph &quot;Agent Repository&quot;
+            AGENT_REPO[📁 infra-ai-agent&lt;br/&gt;Python Code]
+        end
+
+        subgraph &quot;Templates Repository&quot;
+            TEMPLATES_REPO[📁 catalog-repo&lt;br/&gt;YAML Files]
+            COMPONENTS[🧩 Components]
+            RESOURCES[🗃️ Resources]
+            SYSTEMS[🏗️ Systems]
+        end
+
+        subgraph &quot;Backstage Repository&quot;
+            BS_REPO[📁 backstage-idp&lt;br/&gt;Node.js App]
+            BS_CONFIG[⚙️ app-config.yaml]
+            BS_PLUGINS[🔌 Plugins]
+        end
+    end
+
+    %% User Interactions
+    USER --&gt; UI
+    DEV --&gt; UI
+    ARCH --&gt; UI
+    USER --&gt; FASTAPI
+
+    %% Backstage Internal Flow
+    UI --&gt; API_BS
+    API_BS --&gt; PROC_BS
+    PROC_BS --&gt; CAT
+    CAT --&gt; TEMP
+    CAT --&gt; DOCS
+
+    %% AI Agent Processing Flow
+    FASTAPI --&gt; ENDPOINTS
+    ENDPOINTS --&gt; ROUTER
+    ROUTER --&gt;|PNG Image| VISION
+    ROUTER --&gt;|Text Description| TEXT
+    ROUTER --&gt;|Hybrid Request| VISION
+    ROUTER --&gt;|Hybrid Request| TEXT
+
+    %% AI Processing
+    VISION --&gt; GEMINI_V
+    TEXT --&gt; GEMINI_T
+    GEMINI_V --&gt; GOOGLE_AI
+    GEMINI_T --&gt; GOOGLE_AI
+    GOOGLE_AI --&gt; PROMPT_ENG
+    PROMPT_ENG --&gt; YAML_GEN
+
+    %% Validation &amp; Generation
+    YAML_GEN --&gt; MAPPER
+    MAPPER --&gt; VALIDATOR
+    VALIDATOR --&gt; GIT_CLIENT
+
+    %% External Integrations
+    GIT_CLIENT --&gt; GITHUB
+    GITHUB --&gt; TEMPLATES_REPO
+    TEMPLATES_REPO --&gt; COMPONENTS
+    TEMPLATES_REPO --&gt; RESOURCES
+    TEMPLATES_REPO --&gt; SYSTEMS
+
+    %% Backstage Integration
+    TEMPLATES_REPO --&gt; PROC_BS
+    PROC_BS --&gt; CAT
+    WEBHOOK --&gt; METRICS
+
+    %% Repository Management
+    AGENT_REPO --&gt; FASTAPI
+    BS_REPO --&gt; UI
+    BS_CONFIG --&gt; API_BS
+
+    %% Styling
+    classDef userClass fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+    classDef backstageClass fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+    classDef aiClass fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px
+    classDef storageClass fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    classDef externalClass fill:#fce4ec,stroke:#880e4f,stroke-width:2px
+
+    class USER,DEV,ARCH userClass
+    class UI,CAT,TEMP,DOCS,API_BS,PROC_BS,AUTH backstageClass
+    class FASTAPI,ENDPOINTS,ROUTER,VISION,TEXT,YAML_GEN,VALIDATOR,MAPPER,GIT_CLIENT,WEBHOOK,METRICS,GEMINI_V,GEMINI_T,PROMPT_ENG aiClass
+    class AGENT_REPO,TEMPLATES_REPO,BS_REPO,COMPONENTS,RESOURCES,SYSTEMS,BS_CONFIG,BS_PLUGINS storageClass
+    class GOOGLE_AI,GITHUB externalClass
+</code></pre></div></td></tr></table></div>
+<h2 id="estructura-completa-del-proyecto">Estructura Completa del Proyecto<a class="headerlink" href="#estructura-completa-del-proyecto" title="Permanent link">&para;</a></h2>
+<div class="language-text highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span></pre></div></td><td class="code"><div><pre><span></span><code>graph TD
+    subgraph &quot;📁 /home/giovanemere/demos/&quot;
+        subgraph &quot;🤖 infra-ai-agent/&quot;
+            AGENT_CODE[📄 Python Code&lt;br/&gt;FastAPI + Gemini]
+            AGENT_DOCS[📚 Documentation]
+            AGENT_CONFIG[⚙️ Configuration]
+        end
+
+        subgraph &quot;📁 catalog-repo/&quot;
+            CATALOG_YAML[📄 YAML Files&lt;br/&gt;Generated by AI]
+            CATALOG_COMP[🧩 Components]
+            CATALOG_RES[🗃️ Resources]
+        end
+
+        subgraph &quot;🎭 backstage-idp/&quot;
+            BS_APP[📱 Backstage App&lt;br/&gt;Node.js + React]
+            BS_CONFIG_FILE[⚙️ app-config.yaml]
+            BS_SCRIPTS[🔧 Setup Scripts]
+        end
+
+        PROJECT_DOCS[📋 REPOSITORY_STRUCTURE.md]
+    end
+
+    subgraph &quot;🌐 GitHub Repositories&quot;
+        REPO1[📦 demo-infra-ai-agent]
+        REPO2[📦 demo-infra-ai-agent-template-idp]
+        REPO3[📦 backstage-idp&lt;br/&gt;🆕 Nuevo]
+    end
+
+    subgraph &quot;🚀 Running Services&quot;
+        SERVICE1[🤖 AI Agent&lt;br/&gt;:8000]
+        SERVICE2[🎭 Backstage&lt;br/&gt;:3000/:7007]
+    end
+
+    AGENT_CODE --&gt; REPO1
+    CATALOG_YAML --&gt; REPO2
+    BS_APP --&gt; REPO3
+
+    REPO1 --&gt; SERVICE1
+    REPO3 --&gt; SERVICE2
+
+    SERVICE1 --&gt; CATALOG_YAML
+    CATALOG_YAML --&gt; SERVICE2
+</code></pre></div></td></tr></table></div>
+<h2 id="flujo-de-datos-completo">Flujo de Datos Completo<a class="headerlink" href="#flujo-de-datos-completo" title="Permanent link">&para;</a></h2>
+<div class="language-text highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span></pre></div></td><td class="code"><div><pre><span></span><code>sequenceDiagram
+    participant U as Usuario
+    participant BS as Backstage UI
+    participant AI as AI Agent
+    participant G as Gemini API
+    participant GH as GitHub
+    participant CAT as Catalog
+
+    Note over U,CAT: Flujo Completo de Análisis y Catalogación
+
+    U-&gt;&gt;BS: Accede a Backstage IDP
+    BS-&gt;&gt;U: Muestra catálogo actual
+
+    U-&gt;&gt;AI: Envía diagrama/texto
+    AI-&gt;&gt;G: Procesa con Gemini
+    G-&gt;&gt;AI: Retorna análisis
+    AI-&gt;&gt;AI: Genera YAML
+    AI-&gt;&gt;GH: Commit a templates repo
+
+    GH-&gt;&gt;BS: Webhook/Polling
+    BS-&gt;&gt;CAT: Actualiza catálogo
+    CAT-&gt;&gt;BS: Nuevos componentes
+    BS-&gt;&gt;U: Notifica actualización
+
+    U-&gt;&gt;BS: Ve nuevos componentes
+    BS-&gt;&gt;U: Muestra arquitectura catalogada
+</code></pre></div></td></tr></table></div>
+<h2 id="arquitectura-de-despliegue">Arquitectura de Despliegue<a class="headerlink" href="#arquitectura-de-despliegue" title="Permanent link">&para;</a></h2>
+<div class="language-text highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span></pre></div></td><td class="code"><div><pre><span></span><code>graph TB
+    subgraph &quot;🖥️ Desarrollo Local&quot;
+        subgraph &quot;Puertos&quot;
+            PORT3000[&quot;:3000&lt;br/&gt;Backstage UI&quot;]
+            PORT7007[&quot;:7007&lt;br/&gt;Backstage API&quot;]
+            PORT8000[&quot;:8000&lt;br/&gt;AI Agent API&quot;]
+        end
+
+        subgraph &quot;Procesos&quot;
+            PROC1[🎭 yarn dev&lt;br/&gt;Backstage]
+            PROC2[🤖 uvicorn&lt;br/&gt;AI Agent]
+        end
+    end
+
+    subgraph &quot;☁️ Servicios Externos&quot;
+        GEMINI[🤖 Google Gemini API]
+        GITHUB_SVC[🐙 GitHub API]
+    end
+
+    subgraph &quot;💾 Almacenamiento&quot;
+        SQLITE[📄 SQLite&lt;br/&gt;Backstage DB]
+        FILES[📁 File System&lt;br/&gt;Configs &amp; Logs]
+    end
+
+    PORT3000 --&gt; PROC1
+    PORT7007 --&gt; PROC1
+    PORT8000 --&gt; PROC2
+
+    PROC1 --&gt; SQLITE
+    PROC1 --&gt; GITHUB_SVC
+    PROC2 --&gt; GEMINI
+    PROC2 --&gt; GITHUB_SVC
+
+    PROC1 --&gt; FILES
+    PROC2 --&gt; FILES
+</code></pre></div></td></tr></table></div>
+<h2 id="flujo-de-procesamiento-detallado">Flujo de Procesamiento Detallado<a class="headerlink" href="#flujo-de-procesamiento-detallado" title="Permanent link">&para;</a></h2>
+<div class="language-text highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span></pre></div></td><td class="code"><div><pre><span></span><code>sequenceDiagram
+    participant U as Usuario
+    participant API as FastAPI
+    participant VP as Vision Processor
+    participant TP as Text Processor
+    participant G as Gemini API
+    participant YG as YAML Generator
+    participant V as Validator
+    participant GC as Git Client
+    participant GH as GitHub
+    participant BS as Backstage
+
+    Note over U,BS: Flujo de Análisis de Diagrama PNG
+
+    U-&gt;&gt;+API: POST /process-diagram (PNG file)
+    API-&gt;&gt;+VP: analyze_diagram(image_path)
+    VP-&gt;&gt;+G: generate_content([prompt, image])
+    G--&gt;&gt;-VP: YAML content
+    VP--&gt;&gt;-API: Generated YAML
+
+    API-&gt;&gt;+YG: process_yaml(content)
+    YG-&gt;&gt;+V: validate_yaml(content)
+    V--&gt;&gt;-YG: validation_result
+    YG--&gt;&gt;-API: Processed YAML
+
+    alt Validation Success
+        API-&gt;&gt;+GC: save_yaml(filename, content)
+        GC-&gt;&gt;+GH: git commit &amp; push
+        GH--&gt;&gt;-GC: commit_url
+        GC--&gt;&gt;-API: github_url
+
+        GH-&gt;&gt;BS: Webhook/Polling trigger
+        BS-&gt;&gt;BS: Update catalog
+
+        API--&gt;&gt;U: Success response with URLs
+    else Validation Failed
+        API--&gt;&gt;U: Error response
+    end
+
+    Note over U,BS: Flujo de Análisis de Texto
+
+    U-&gt;&gt;+API: POST /process-text (description)
+    API-&gt;&gt;+TP: analyze_text(description)
+    TP-&gt;&gt;+G: generate_content(prompt)
+    G--&gt;&gt;-TP: YAML content
+    TP--&gt;&gt;-API: Generated YAML
+
+    API-&gt;&gt;+YG: process_yaml(content)
+    YG-&gt;&gt;+V: validate_yaml(content)
+    V--&gt;&gt;-YG: validation_result
+    YG--&gt;&gt;-API: Processed YAML
+
+    alt Validation Success
+        API-&gt;&gt;+GC: save_yaml(filename, content)
+        GC-&gt;&gt;+GH: git commit &amp; push
+        GH--&gt;&gt;-GC: commit_url
+        GC--&gt;&gt;-API: github_url
+
+        GH-&gt;&gt;BS: Webhook/Polling trigger
+        BS-&gt;&gt;BS: Update catalog
+
+        API--&gt;&gt;U: Success response with URLs
+    else Validation Failed
+        API--&gt;&gt;U: Error response
+    end
+</code></pre></div></td></tr></table></div>
+<h2 id="arquitectura-de-componentes-backstage">Arquitectura de Componentes Backstage<a class="headerlink" href="#arquitectura-de-componentes-backstage" title="Permanent link">&para;</a></h2>
+<div class="language-text highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span></pre></div></td><td class="code"><div><pre><span></span><code>graph LR
+    subgraph &quot;Backstage IDP&quot;
+        subgraph &quot;Systems&quot;
+            SYS1[🏗️ infra-ai-agent-system]
+        end
+
+        subgraph &quot;Components&quot;
+            COMP1[🚀 infra-ai-agent-api]
+            COMP2[👁️ vision-processor]
+            COMP3[📝 text-processor]
+            COMP4[📄 yaml-generator]
+            COMP5[✅ backstage-validator]
+            COMP6[📦 git-client]
+        end
+
+        subgraph &quot;Resources&quot;
+            RES1[📁 templates-repository]
+        end
+
+        subgraph &quot;APIs&quot;
+            API1[🔌 architecture-analysis-api]
+            API2[🌐 gemini-vision-api]
+            API3[🌐 gemini-text-api]
+        end
+    end
+
+    %% System relationships
+    SYS1 --&gt; COMP1
+    SYS1 --&gt; COMP2
+    SYS1 --&gt; COMP3
+    SYS1 --&gt; COMP4
+    SYS1 --&gt; COMP5
+    SYS1 --&gt; COMP6
+    SYS1 --&gt; RES1
+
+    %% Component dependencies
+    COMP1 --&gt; COMP2
+    COMP1 --&gt; COMP3
+    COMP1 --&gt; COMP4
+    COMP1 --&gt; COMP6
+    COMP4 --&gt; COMP5
+    COMP6 --&gt; RES1
+
+    %% API relationships
+    COMP1 --&gt; API1
+    COMP2 --&gt; API2
+    COMP3 --&gt; API3
+
+    %% Styling
+    classDef systemClass fill:#e3f2fd,stroke:#0277bd,stroke-width:3px
+    classDef componentClass fill:#f1f8e9,stroke:#33691e,stroke-width:2px
+    classDef resourceClass fill:#fff8e1,stroke:#f57f17,stroke-width:2px
+    classDef apiClass fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+
+    class SYS1 systemClass
+    class COMP1,COMP2,COMP3,COMP4,COMP5,COMP6 componentClass
+    class RES1 resourceClass
+    class API1,API2,API3 apiClass
+</code></pre></div></td></tr></table></div>
+<h2 id="mapeo-de-servicios-aws-a-backstage">Mapeo de Servicios AWS a Backstage<a class="headerlink" href="#mapeo-de-servicios-aws-a-backstage" title="Permanent link">&para;</a></h2>
+<div class="language-text highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span></pre></div></td><td class="code"><div><pre><span></span><code>graph TD
+    subgraph &quot;AWS Services&quot;
+        S3[🪣 S3 Bucket]
+        LAMBDA[⚡ Lambda Function]
+        CF[🌐 CloudFront]
+        APIGW[🚪 API Gateway]
+        RDS[🗄️ RDS Database]
+        DYNAMO[⚡ DynamoDB]
+        R53[🌍 Route53]
+        CW[📊 CloudWatch]
+        ECS[🐳 ECS/Fargate]
+        ALB[⚖️ Load Balancer]
+    end
+
+    subgraph &quot;Backstage Catalog&quot;
+        subgraph &quot;Resources&quot;
+            R_STORAGE[📦 Resource&lt;br/&gt;type: storage]
+            R_DATABASE[🗃️ Resource&lt;br/&gt;type: database]
+            R_DNS[🌐 Resource&lt;br/&gt;type: dns]
+            R_MONITOR[📊 Resource&lt;br/&gt;type: monitoring]
+        end
+
+        subgraph &quot;Components&quot;
+            C_SERVICE[⚙️ Component&lt;br/&gt;type: service]
+            C_CDN[🌐 Component&lt;br/&gt;type: cdn]
+            C_API[🔌 Component&lt;br/&gt;type: api]
+            C_LB[⚖️ Component&lt;br/&gt;type: load-balancer]
+            C_WEBSITE[🌐 Component&lt;br/&gt;type: website]
+        end
+    end
+
+    %% Mappings
+    S3 --&gt; R_STORAGE
+    RDS --&gt; R_DATABASE
+    DYNAMO --&gt; R_DATABASE
+    R53 --&gt; R_DNS
+    CW --&gt; R_MONITOR
+
+    LAMBDA --&gt; C_SERVICE
+    ECS --&gt; C_SERVICE
+    CF --&gt; C_CDN
+    APIGW --&gt; C_API
+    ALB --&gt; C_LB
+
+    %% Styling
+    classDef awsClass fill:#ff9800,stroke:#e65100,stroke-width:2px,color:#fff
+    classDef resourceClass fill:#4caf50,stroke:#2e7d32,stroke-width:2px,color:#fff
+    classDef componentClass fill:#2196f3,stroke:#1565c0,stroke-width:2px,color:#fff
+
+    class S3,LAMBDA,CF,APIGW,RDS,DYNAMO,R53,CW,ECS,ALB awsClass
+    class R_STORAGE,R_DATABASE,R_DNS,R_MONITOR resourceClass
+    class C_SERVICE,C_CDN,C_API,C_LB,C_WEBSITE componentClass
+</code></pre></div></td></tr></table></div>
+<h2 id="estados-del-procesamiento">Estados del Procesamiento<a class="headerlink" href="#estados-del-procesamiento" title="Permanent link">&para;</a></h2>
+<div class="language-text highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span></pre></div></td><td class="code"><div><pre><span></span><code>stateDiagram-v2
+    [*] --&gt; Received: Request received
+
+    Received --&gt; Processing: Start analysis
+    Processing --&gt; VisionAnalysis: PNG input
+    Processing --&gt; TextAnalysis: Text input
+    Processing --&gt; HybridAnalysis: Mixed input
+
+    VisionAnalysis --&gt; YAMLGeneration: Gemini Vision response
+    TextAnalysis --&gt; YAMLGeneration: Gemini Text response
+    HybridAnalysis --&gt; YAMLGeneration: Combined analysis
+
+    YAMLGeneration --&gt; Validation: YAML created
+
+    Validation --&gt; ValidationPassed: Schema valid
+    Validation --&gt; ValidationFailed: Schema invalid
+
+    ValidationPassed --&gt; GitCommit: Save to repository
+    ValidationFailed --&gt; Error: Return error
+
+    GitCommit --&gt; BackstageUpdate: Push successful
+    GitCommit --&gt; GitError: Push failed
+
+    BackstageUpdate --&gt; Success: Catalog updated
+    GitError --&gt; Error: Git operation failed
+
+    Success --&gt; [*]
+    Error --&gt; [*]
+
+    note right of VisionAnalysis
+        Gemini Vision API
+        Analyzes PNG diagrams
+        Extracts AWS services
+    end note
+
+    note right of TextAnalysis
+        Gemini Text API
+        Processes descriptions
+        Identifies architecture
+    end note
+
+    note right of Validation
+        Backstage schema validation
+        YAML syntax check
+        Dependency verification
+    end note
+</code></pre></div></td></tr></table></div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.footer", "content.action.edit"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../search/main.js"></script>
+      
+    
+  </body>
+</html>

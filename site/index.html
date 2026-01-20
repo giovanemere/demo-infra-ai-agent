@@ -1,0 +1,1314 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Infrastructure AI Agent - Complete Documentation">
+      
+      
+      
+      
+      
+        <link rel="next" href="architecture/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>AI Agent Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#infrastructure-ai-agent" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="." title="AI Agent Documentation" class="md-header__button md-logo" aria-label="AI Agent Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            AI Agent Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Home
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="." title="AI Agent Documentation" class="md-nav__button md-logo" aria-label="AI Agent Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    AI Agent Documentation
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="." class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#descripcion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📋 Descripción
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#arquitectura" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🏗️ Arquitectura
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🏗️ Arquitectura">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#componentes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Componentes:
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#inicio-rapido" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🚀 Inicio Rápido
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#estructura-del-proyecto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📁 Estructura del Proyecto
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#funcionalidades" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🔧 Funcionalidades
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔧 Funcionalidades">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-procesamiento-de-texto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Procesamiento de Texto
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-procesamiento-de-imagenes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Procesamiento de Imágenes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-validacion-yaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Validación YAML
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-sincronizacion-git" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Sincronización Git
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#api-endpoints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🔌 API Endpoints
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔌 API Endpoints">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#post-process-text" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        POST /process-text
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#post-process-image" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        POST /process-image
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get-health" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GET /health
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get-docs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GET /docs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuracion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ⚙️ Configuración
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="⚙️ Configuración">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#variables-de-entorno-env" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Variables de Entorno (.env)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#flujo-de-procesamiento" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🔄 Flujo de Procesamiento
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🧪 Testing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#monitoreo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📊 Monitoreo
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📊 Monitoreo">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Logs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#metricas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Métricas
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#desarrollo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🔧 Desarrollo
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔧 Desarrollo">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#instalacion-de-dependencias" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Instalación de dependencias
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#estructura-de-desarrollo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Estructura de desarrollo
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#estado-actual" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🎯 Estado Actual
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#proximas-mejoras" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🚀 Próximas Mejoras
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#descripcion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📋 Descripción
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#arquitectura" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🏗️ Arquitectura
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🏗️ Arquitectura">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#componentes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Componentes:
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#inicio-rapido" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🚀 Inicio Rápido
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#estructura-del-proyecto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📁 Estructura del Proyecto
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#funcionalidades" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🔧 Funcionalidades
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔧 Funcionalidades">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-procesamiento-de-texto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Procesamiento de Texto
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-procesamiento-de-imagenes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Procesamiento de Imágenes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-validacion-yaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Validación YAML
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-sincronizacion-git" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Sincronización Git
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#api-endpoints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🔌 API Endpoints
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔌 API Endpoints">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#post-process-text" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        POST /process-text
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#post-process-image" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        POST /process-image
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get-health" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GET /health
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get-docs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GET /docs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuracion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ⚙️ Configuración
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="⚙️ Configuración">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#variables-de-entorno-env" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Variables de Entorno (.env)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#flujo-de-procesamiento" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🔄 Flujo de Procesamiento
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🧪 Testing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#monitoreo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📊 Monitoreo
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📊 Monitoreo">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Logs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#metricas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Métricas
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#desarrollo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🔧 Desarrollo
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔧 Desarrollo">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#instalacion-de-dependencias" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Instalación de dependencias
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#estructura-de-desarrollo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Estructura de desarrollo
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#estado-actual" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🎯 Estado Actual
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#proximas-mejoras" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🚀 Próximas Mejoras
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="infrastructure-ai-agent">🤖 Infrastructure AI Agent<a class="headerlink" href="#infrastructure-ai-agent" title="Permanent link">&para;</a></h1>
+<h2 id="descripcion">📋 Descripción<a class="headerlink" href="#descripcion" title="Permanent link">&para;</a></h2>
+<p>AI Agent para análisis automático de arquitecturas de infraestructura usando Google Gemini API. Procesa descripciones de texto e imágenes para generar definiciones de Backstage YAML automáticamente.</p>
+<h2 id="arquitectura">🏗️ Arquitectura<a class="headerlink" href="#arquitectura" title="Permanent link">&para;</a></h2>
+<div class="language-text highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code>Frontend (Static) → FastAPI Backend → Gemini AI → Validators → GitHub → Backstage
+</code></pre></div></td></tr></table></div>
+<h3 id="componentes">Componentes:<a class="headerlink" href="#componentes" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Frontend</strong>: Interfaz web estática (HTML/JS)</li>
+<li><strong>Backend</strong>: FastAPI + Python</li>
+<li><strong>Procesadores</strong>: Texto e imágenes con Gemini</li>
+<li><strong>Validadores</strong>: Validación YAML de Backstage</li>
+<li><strong>Git Client</strong>: Sincronización automática con GitHub</li>
+</ul>
+<h2 id="inicio-rapido">🚀 Inicio Rápido<a class="headerlink" href="#inicio-rapido" title="Permanent link">&para;</a></h2>
+<div class="language-bash highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span>
+<span class="normal">8</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1"># 1. Configurar entorno</span>
+./setup.sh
+
+<span class="c1"># 2. Configurar API key</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;GEMINI_API_KEY=your_api_key&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>.env
+
+<span class="c1"># 3. Iniciar servicio</span>
+./start.sh
+</code></pre></div></td></tr></table></div>
+<p><strong>URL</strong>: <a href="http://localhost:8000">http://localhost:8000</a></p>
+<h2 id="estructura-del-proyecto">📁 Estructura del Proyecto<a class="headerlink" href="#estructura-del-proyecto" title="Permanent link">&para;</a></h2>
+<div class="language-text highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span></pre></div></td><td class="code"><div><pre><span></span><code>agent/
+├── main.py              # API principal FastAPI
+├── processors/          # Procesadores IA
+│   ├── text.py         # Análisis de texto
+│   └── vision.py       # Análisis de imágenes
+├── validators/          # Validadores
+│   └── backstage.py    # Validación YAML Backstage
+├── generators/          # Generadores de contenido
+├── database.py          # Gestión de base de datos
+├── git_client.py        # Cliente Git para sincronización
+└── static/             # Frontend web
+    └── index.html      # Interfaz principal
+</code></pre></div></td></tr></table></div>
+<h2 id="funcionalidades">🔧 Funcionalidades<a class="headerlink" href="#funcionalidades" title="Permanent link">&para;</a></h2>
+<h3 id="1-procesamiento-de-texto">1. <strong>Procesamiento de Texto</strong><a class="headerlink" href="#1-procesamiento-de-texto" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Análisis de descripciones de arquitectura</li>
+<li>Extracción de componentes y relaciones</li>
+<li>Generación de YAML estructurado</li>
+</ul>
+<h3 id="2-procesamiento-de-imagenes">2. <strong>Procesamiento de Imágenes</strong><a class="headerlink" href="#2-procesamiento-de-imagenes" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Análisis de diagramas de arquitectura</li>
+<li>Reconocimiento de componentes visuales</li>
+<li>Interpretación de flujos y conexiones</li>
+</ul>
+<h3 id="3-validacion-yaml">3. <strong>Validación YAML</strong><a class="headerlink" href="#3-validacion-yaml" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Validación de sintaxis Backstage</li>
+<li>Verificación de estructura</li>
+<li>Corrección automática de errores</li>
+</ul>
+<h3 id="4-sincronizacion-git">4. <strong>Sincronización Git</strong><a class="headerlink" href="#4-sincronizacion-git" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Push automático a repositorio GitHub</li>
+<li>Organización por proyectos</li>
+<li>Versionado automático</li>
+</ul>
+<h2 id="api-endpoints">🔌 API Endpoints<a class="headerlink" href="#api-endpoints" title="Permanent link">&para;</a></h2>
+<h3 id="post-process-text"><strong>POST /process-text</strong><a class="headerlink" href="#post-process-text" title="Permanent link">&para;</a></h3>
+<p>Procesa descripción de texto de arquitectura
+<div class="language-json highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;App web con S3, CloudFront y Lambda&quot;</span>
+<span class="p">}</span>
+</code></pre></div></td></tr></table></div></p>
+<h3 id="post-process-image"><strong>POST /process-image</strong><a class="headerlink" href="#post-process-image" title="Permanent link">&para;</a></h3>
+<p>Procesa imagen de diagrama de arquitectura
+<div class="language-json highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;image&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;base64_encoded_image&quot;</span>
+<span class="p">}</span>
+</code></pre></div></td></tr></table></div></p>
+<h3 id="get-health"><strong>GET /health</strong><a class="headerlink" href="#get-health" title="Permanent link">&para;</a></h3>
+<p>Verificación de estado del servicio</p>
+<h3 id="get-docs"><strong>GET /docs</strong><a class="headerlink" href="#get-docs" title="Permanent link">&para;</a></h3>
+<p>Documentación interactiva de la API</p>
+<h2 id="configuracion">⚙️ Configuración<a class="headerlink" href="#configuracion" title="Permanent link">&para;</a></h2>
+<h3 id="variables-de-entorno-env">Variables de Entorno (.env)<a class="headerlink" href="#variables-de-entorno-env" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1"># API Keys</span>
+<span class="nv">GEMINI_API_KEY</span><span class="o">=</span>your_gemini_api_key
+
+<span class="c1"># GitHub</span>
+<span class="nv">GITHUB_TOKEN</span><span class="o">=</span>your_github_token
+
+<span class="c1"># Base de datos</span>
+<span class="nv">POSTGRES_HOST</span><span class="o">=</span>localhost
+<span class="nv">POSTGRES_PORT</span><span class="o">=</span><span class="m">5432</span>
+<span class="nv">POSTGRES_USER</span><span class="o">=</span>backstage
+<span class="nv">POSTGRES_PASSWORD</span><span class="o">=</span>backstage123
+<span class="nv">POSTGRES_DB</span><span class="o">=</span>backstage
+
+<span class="c1"># Repositorios</span>
+<span class="nv">TEMPLATES_REPO</span><span class="o">=</span>git@github.com:giovanemere/demo-infra-ai-agent-template-idp.git
+</code></pre></div></td></tr></table></div>
+<h2 id="flujo-de-procesamiento">🔄 Flujo de Procesamiento<a class="headerlink" href="#flujo-de-procesamiento" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>Input</strong>: Usuario envía descripción/imagen</li>
+<li><strong>Análisis</strong>: Gemini AI procesa el contenido</li>
+<li><strong>Estructuración</strong>: Extrae componentes y relaciones</li>
+<li><strong>Generación</strong>: Crea YAML de Backstage válido</li>
+<li><strong>Validación</strong>: Verifica estructura y sintaxis</li>
+<li><strong>Almacenamiento</strong>: Guarda en repositorio GitHub</li>
+<li><strong>Sincronización</strong>: Backstage detecta automáticamente</li>
+</ol>
+<h2 id="testing">🧪 Testing<a class="headerlink" href="#testing" title="Permanent link">&para;</a></h2>
+<div class="language-bash highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span>
+<span class="normal">8</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1"># Test básico</span>
+curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;http://localhost:8000/process-text&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;description&quot;: &quot;App web con S3 y Lambda&quot;}&#39;</span>
+
+<span class="c1"># Test con imagen</span>
+curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;http://localhost:8000/process-image&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-F<span class="w"> </span><span class="s2">&quot;image=@diagram.png&quot;</span>
+</code></pre></div></td></tr></table></div>
+<h2 id="monitoreo">📊 Monitoreo<a class="headerlink" href="#monitoreo" title="Permanent link">&para;</a></h2>
+<h3 id="logs">Logs<a class="headerlink" href="#logs" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code>tail<span class="w"> </span>-f<span class="w"> </span>ai-agent.log
+</code></pre></div></td></tr></table></div>
+<h3 id="metricas">Métricas<a class="headerlink" href="#metricas" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Requests procesados</li>
+<li>Tiempo de respuesta</li>
+<li>Errores de validación</li>
+<li>Sincronizaciones exitosas</li>
+</ul>
+<h2 id="desarrollo">🔧 Desarrollo<a class="headerlink" href="#desarrollo" title="Permanent link">&para;</a></h2>
+<h3 id="instalacion-de-dependencias">Instalación de dependencias<a class="headerlink" href="#instalacion-de-dependencias" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+</code></pre></div></td></tr></table></div>
+<h3 id="estructura-de-desarrollo">Estructura de desarrollo<a class="headerlink" href="#estructura-de-desarrollo" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1"># Activar entorno virtual</span>
+<span class="nb">source</span><span class="w"> </span>venv/bin/activate
+
+<span class="c1"># Instalar en modo desarrollo</span>
+pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
+
+<span class="c1"># Ejecutar tests</span>
+python<span class="w"> </span>-m<span class="w"> </span>pytest
+
+<span class="c1"># Linting</span>
+flake8<span class="w"> </span>agent/
+</code></pre></div></td></tr></table></div>
+<h2 id="estado-actual">🎯 Estado Actual<a class="headerlink" href="#estado-actual" title="Permanent link">&para;</a></h2>
+<ul>
+<li>✅ <strong>API FastAPI</strong>: Funcionando</li>
+<li>✅ <strong>Procesador de texto</strong>: Gemini integrado</li>
+<li>✅ <strong>Procesador de imágenes</strong>: Gemini Vision</li>
+<li>✅ <strong>Validador YAML</strong>: Backstage compatible</li>
+<li>✅ <strong>Git Client</strong>: Sincronización automática</li>
+<li>✅ <strong>Frontend</strong>: Interfaz web funcional</li>
+<li>✅ <strong>Base de datos</strong>: PostgreSQL integrada</li>
+</ul>
+<h2 id="proximas-mejoras">🚀 Próximas Mejoras<a class="headerlink" href="#proximas-mejoras" title="Permanent link">&para;</a></h2>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Cache de respuestas IA</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Métricas avanzadas</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Templates personalizados</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Integración con más proveedores IA</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> API de webhooks</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+        
+          
+          <a href="architecture/" class="md-footer__link md-footer__link--next" aria-label="Next: Architecture">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Architecture
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": ".", "features": ["navigation.footer", "content.action.edit"], "search": "assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="search/main.js"></script>
+      
+    
+  </body>
+</html>
