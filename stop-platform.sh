@@ -1,42 +1,17 @@
 #!/bin/bash
-
-# Auto-load environment variables
-if [ -f ".env" ]; then
-    set -a
-    source .env
-    set +a
-elif [ -f "../backstage-idp/infra-ai-backstage/.env" ]; then
-    cd ../backstage-idp/infra-ai-backstage
-    set -a
-    source .env
-    set +a
-    cd - > /dev/null
-elif [ -f "backstage-idp/infra-ai-backstage/.env" ]; then
-    cd backstage-idp/infra-ai-backstage
-    set -a
-    source .env
-    set +a
-    cd - > /dev/null
-fi
-
 echo "🛑 Deteniendo Infrastructure AI Platform..."
 
-# Detener AI Agent
 if [ -f "ai-agent.pid" ]; then
-    AI_PID=$(cat ai-agent.pid)
-    kill $AI_PID 2>/dev/null && echo "✅ AI Agent detenido"
+    kill $(cat ai-agent.pid) 2>/dev/null && echo "✅ AI Agent detenido"
     rm ai-agent.pid
 fi
 
-# Detener Backstage
 if [ -f "backstage.pid" ]; then
-    BS_PID=$(cat backstage.pid)
-    kill $BS_PID 2>/dev/null && echo "✅ Backstage detenido"
+    kill $(cat backstage.pid) 2>/dev/null && echo "✅ Backstage detenido"
     rm backstage.pid
 fi
 
-# Limpiar puertos si es necesario
-pkill -f "uvicorn.*8000" 2>/dev/null
-pkill -f "yarn.*dev" 2>/dev/null
+pkill -f "uvicorn.*8000" 2>/dev/null || true
+pkill -f "yarn.*start" 2>/dev/null || true
 
 echo "🏁 Plataforma detenida"
