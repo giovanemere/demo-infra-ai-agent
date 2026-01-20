@@ -46,3 +46,9 @@ templates-repo/
 
 # Process IDs
 *.pid
+
+# Scripts archivados
+archived-scripts/
+
+# Documentación archivada
+archived-docs/
