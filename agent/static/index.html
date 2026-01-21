@@ -51,6 +51,7 @@
         <div class="tabs">
             <button class="tab-btn active" onclick="showTab('text')">📝 Procesar Texto</button>
             <button class="tab-btn" onclick="showTab('image')">🖼️ Procesar Imagen</button>
+            <button class="tab-btn" onclick="showTab('template')">🏗️ Crear Template</button>
             <button class="tab-btn" onclick="showTab('history')">📊 Historial</button>
             <button class="tab-btn" onclick="showTab('config')">⚙️ Configurar GitHub</button>
         </div>
@@ -132,6 +133,108 @@
                     <div class="step" id="imgStep6">
                         <span class="step-icon">✅</span>
                         <span>Listo para Backstage!</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="template" class="tab-content">
+            <h2>🏗️ Crear Template de Backstage</h2>
+            <p>Crea un template personalizado que aparecerá en el catálogo de Backstage para que otros usuarios puedan desplegar proyectos similares.</p>
+            
+            <form id="templateForm">
+                <div class="form-group">
+                    <label>Nombre del Template:</label>
+                    <input type="text" name="template_name" placeholder="mi-template-aws" pattern="^[a-zA-Z0-9-]+$" required>
+                    <small style="color: #666;">Solo letras, números y guiones. Ejemplo: aws-web-app</small>
+                </div>
+                
+                <div class="form-group">
+                    <label>Título del Template:</label>
+                    <input type="text" name="template_title" placeholder="AWS Web Application" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Descripción:</label>
+                    <textarea name="template_description" rows="3" placeholder="Template para crear aplicaciones web en AWS con S3, CloudFront y Lambda" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>Tecnología Principal:</label>
+                    <select name="technology" required>
+                        <option value="aws">AWS</option>
+                        <option value="azure">Azure</option>
+                        <option value="gcp">Google Cloud</option>
+                        <option value="kubernetes">Kubernetes</option>
+                        <option value="docker">Docker</option>
+                        <option value="terraform">Terraform</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Tipo de Componente:</label>
+                    <select name="component_type" required>
+                        <option value="service">Service</option>
+                        <option value="website">Website</option>
+                        <option value="library">Library</option>
+                        <option value="api">API</option>
+                        <option value="infrastructure">Infrastructure</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Tags (separados por comas):</label>
+                    <input type="text" name="tags" placeholder="aws, serverless, web, recommended">
+                </div>
+                
+                <div class="form-group">
+                    <label>Propietario:</label>
+                    <input type="text" name="owner" value="group:default/developers" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Parámetros del Template:</label>
+                    <div id="parameters">
+                        <div class="parameter-group" style="border: 1px solid #ecf0f1; padding: 15px; margin: 10px 0; border-radius: 6px;">
+                            <input type="text" placeholder="Nombre del parámetro" name="param_name[]" style="width: 30%; margin-right: 10px;">
+                            <input type="text" placeholder="Título" name="param_title[]" style="width: 30%; margin-right: 10px;">
+                            <select name="param_type[]" style="width: 20%; margin-right: 10px;">
+                                <option value="string">String</option>
+                                <option value="number">Number</option>
+                                <option value="boolean">Boolean</option>
+                            </select>
+                            <button type="button" onclick="removeParameter(this)" style="width: 10%; background: #e74c3c;">❌</button>
+                        </div>
+                    </div>
+                    <button type="button" onclick="addParameter()" class="btn" style="background: #27ae60; margin-top: 10px;">➕ Agregar Parámetro</button>
+                </div>
+                
+                <button type="submit" class="btn">🚀 Crear Template</button>
+            </form>
+            
+            <div class="loading" id="templateLoading">
+                <div class="spinner"></div>
+                <p>Creando template...</p>
+                <div class="process-steps" id="templateSteps">
+                    <div class="step" id="tplStep1">
+                        <span class="step-icon">📝</span>
+                        <span>Generando estructura del template...</span>
+                    </div>
+                    <div class="step" id="tplStep2">
+                        <span class="step-icon">📁</span>
+                        <span>Creando archivos de configuración...</span>
+                    </div>
+                    <div class="step" id="tplStep3">
+                        <span class="step-icon">🔗</span>
+                        <span>Subiendo a repositorio de templates...</span>
+                    </div>
+                    <div class="step" id="tplStep4">
+                        <span class="step-icon">🔄</span>
+                        <span>Sincronizando con Backstage...</span>
+                    </div>
+                    <div class="step" id="tplStep5">
+                        <span class="step-icon">✅</span>
+                        <span>Template disponible en Backstage!</span>
                     </div>
                 </div>
             </div>
@@ -420,6 +523,138 @@
                 }
             } catch (error) {
                 showResult(`<h3>❌ Error de Conexión</h3><p>${error.message}</p>`, 'error');
+            }
+        });
+
+        // Funciones para manejar parámetros del template
+        function addParameter() {
+            const parametersDiv = document.getElementById('parameters');
+            const newParam = document.createElement('div');
+            newParam.className = 'parameter-group';
+            newParam.style = 'border: 1px solid #ecf0f1; padding: 15px; margin: 10px 0; border-radius: 6px;';
+            newParam.innerHTML = `
+                <input type="text" placeholder="Nombre del parámetro" name="param_name[]" style="width: 30%; margin-right: 10px;">
+                <input type="text" placeholder="Título" name="param_title[]" style="width: 30%; margin-right: 10px;">
+                <select name="param_type[]" style="width: 20%; margin-right: 10px;">
+                    <option value="string">String</option>
+                    <option value="number">Number</option>
+                    <option value="boolean">Boolean</option>
+                </select>
+                <button type="button" onclick="removeParameter(this)" style="width: 10%; background: #e74c3c;">❌</button>
+            `;
+            parametersDiv.appendChild(newParam);
+        }
+
+        function removeParameter(button) {
+            button.parentElement.remove();
+        }
+
+        // Manejar formulario de template
+        document.getElementById('templateForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const loading = document.getElementById('templateLoading');
+            const btn = e.target.querySelector('button[type="submit"]');
+            
+            loading.style.display = 'block';
+            btn.disabled = true;
+            
+            // Reset y simular pasos
+            resetSteps('tplStep', 5);
+            const stepsPromise = simulateSteps('tplStep', 5);
+            
+            try {
+                const formData = new FormData(e.target);
+                
+                // Recopilar parámetros
+                const paramNames = formData.getAll('param_name[]');
+                const paramTitles = formData.getAll('param_title[]');
+                const paramTypes = formData.getAll('param_type[]');
+                
+                const parameters = paramNames.map((name, index) => ({
+                    name: name,
+                    title: paramTitles[index],
+                    type: paramTypes[index]
+                })).filter(param => param.name.trim() !== '');
+                
+                // Crear objeto de datos del template
+                const templateData = {
+                    template_name: formData.get('template_name'),
+                    template_title: formData.get('template_title'),
+                    template_description: formData.get('template_description'),
+                    technology: formData.get('technology'),
+                    component_type: formData.get('component_type'),
+                    tags: formData.get('tags'),
+                    owner: formData.get('owner'),
+                    parameters: parameters
+                };
+                
+                // Iniciar simulación de pasos
+                stepsPromise;
+                
+                const response = await fetch('/create-template', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(templateData)
+                });
+                
+                const result = await response.json();
+                
+                // Esperar a que terminen los pasos
+                await stepsPromise;
+                
+                if (result.status === 'success') {
+                    showResult(`
+                        <h3>✅ Template Creado Exitosamente</h3>
+                        <p><strong>Nombre:</strong> ${result.template_name}</p>
+                        <p><strong>ID:</strong> ${result.template_id}</p>
+                        
+                        <h4>📁 Archivos Creados:</h4>
+                        <div class="file-structure">
+📁 templates/${result.template_name}/
+├── 📄 template.yaml              # Configuración del template
+├── 📁 content/
+│   ├── 📄 catalog-info.yaml     # Template del componente
+│   └── 📄 README.md             # Documentación
+└── 📄 schema.json               # Esquema de validación
+                        </div>
+                        
+                        ${showGitHubInfo(result.github_url, result.template_name)}
+                        
+                        <div class="github-info">
+                            <h4>🎯 Disponible en Backstage</h4>
+                            <p><strong>Ubicación:</strong> Software Catalog → Create Component</p>
+                            <p><strong>Búsqueda:</strong> "${result.template_title}"</p>
+                            <p><strong>URL Backstage:</strong> <a href="http://localhost:3000/create" target="_blank">http://localhost:3000/create</a></p>
+                        </div>
+                        
+                        <p><strong>🤖 IA:</strong> Template sincronizado automáticamente con Backstage</p>
+                    `, 'success');
+                    
+                    // Limpiar formulario
+                    e.target.reset();
+                    // Resetear parámetros a uno solo
+                    document.getElementById('parameters').innerHTML = `
+                        <div class="parameter-group" style="border: 1px solid #ecf0f1; padding: 15px; margin: 10px 0; border-radius: 6px;">
+                            <input type="text" placeholder="Nombre del parámetro" name="param_name[]" style="width: 30%; margin-right: 10px;">
+                            <input type="text" placeholder="Título" name="param_title[]" style="width: 30%; margin-right: 10px;">
+                            <select name="param_type[]" style="width: 20%; margin-right: 10px;">
+                                <option value="string">String</option>
+                                <option value="number">Number</option>
+                                <option value="boolean">Boolean</option>
+                            </select>
+                            <button type="button" onclick="removeParameter(this)" style="width: 10%; background: #e74c3c;">❌</button>
+                        </div>
+                    `;
+                } else {
+                    showResult(`<h3>❌ Error</h3><p>${result.message}</p>`, 'error');
+                }
+            } catch (error) {
+                showResult(`<h3>❌ Error de Conexión</h3><p>${error.message}</p>`, 'error');
+            } finally {
+                loading.style.display = 'none';
+                btn.disabled = false;
             }
         });
 

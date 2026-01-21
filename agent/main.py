@@ -4,12 +4,17 @@ from fastapi.responses import HTMLResponse, JSONResponse
 from sqlalchemy.orm import Session
 from processors.vision import VisionProcessor
 from processors.text import TextProcessor
-from validators.backstage import BackstageValidator
+from validators.backstage_validator import BackstageValidator
+from generators.backstage_generator import BackstageGenerator
+from generators.template_generator import TemplateGenerator
 from git_client import GitClient
 from database import create_tables, get_db, save_analysis, get_recent_analyses, save_github_config, get_active_github_config
 import tempfile
 import os
 import hashlib
+import json
+from pydantic import BaseModel
+from typing import List, Dict, Any
 
 app = FastAPI(title="Infra AI Agent", version="1.0.0")
 
@@ -23,11 +28,28 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 vision = VisionProcessor()
 text_processor = TextProcessor()
 validator = BackstageValidator()
+template_generator = TemplateGenerator()
 git_client = GitClient()
+
+# Modelos Pydantic
+class TemplateParameter(BaseModel):
+    name: str
+    title: str
+    type: str
+
+class TemplateRequest(BaseModel):
+    template_name: str
+    template_title: str
+    template_description: str
+    technology: str
+    component_type: str
+    tags: str
+    owner: str
+    parameters: List[TemplateParameter]
 
 @app.post("/process-image")
 async def process_image(image: UploadFile = File(...), db: Session = Depends(get_db)):
-    """Procesa imagen de arquitectura y genera YAML para Backstage"""
+    """Procesa imagen de arquitectura y genera template de Backstage"""
     try:
         # Guardar imagen temporalmente
         with tempfile.NamedTemporaryFile(delete=False, suffix='.png') as tmp:
@@ -36,33 +58,46 @@ async def process_image(image: UploadFile = File(...), db: Session = Depends(get
             tmp_path = tmp.name
         
         try:
-            # Procesar con Gemini Vision
-            yaml_content = vision.analyze_diagram(tmp_path)
+            # Procesar con Gemini Vision para extraer servicios AWS
+            analysis_result = vision.analyze_architecture_for_template(tmp_path)
             
-            # Validación básica
-            if not yaml_content or len(yaml_content.strip()) < 10:
+            if not analysis_result or not analysis_result.get('services'):
                 save_analysis(db, 'image', image.filename, '', 
-                             status='error', error_message='Generated YAML is empty or too short')
-                return {"status": "error", "message": "Generated YAML is empty or too short"}
+                             status='error', error_message='No AWS services detected in image')
+                return {"status": "error", "message": "No se detectaron servicios AWS en la imagen"}
             
-            # Generar nombre de proyecto basado en la imagen
-            project_name = f"ai-image-project-{hash(image.filename) % 10000}"
+            # Generar template específico basado en los servicios detectados
+            template_name = f"aws-{analysis_result['solution_type']}-{hash(image.filename) % 1000}"
+            template_data = {
+                "template_name": template_name,
+                "template_title": analysis_result['title'],
+                "template_description": analysis_result['description'],
+                "technology": "aws",
+                "component_type": analysis_result['component_type'],
+                "tags": analysis_result['tags'],
+                "owner": "group:default/developers",
+                "parameters": analysis_result['parameters'],
+                "aws_services": analysis_result['services']
+            }
             
-            # Crear estructura completa del proyecto
-            github_url = git_client.save_project(project_name, yaml_content, f"Análisis de imagen: {image.filename}")
+            # Crear template completo
+            template_files = template_generator.generate_aws_template(template_data)
+            github_url = git_client.save_template(template_name, template_files)
             
             # Guardar en base de datos
-            analysis = save_analysis(db, 'image', image.filename, yaml_content, 
-                                    github_url, f"{project_name}/catalog-info.yaml")
+            analysis = save_analysis(db, 'image', image.filename, json.dumps(template_data), 
+                                    github_url, f"templates/{template_name}/template.yaml")
             
             return {
                 "status": "success",
-                "yaml_content": yaml_content,
+                "template_name": template_name,
+                "template_title": analysis_result['title'],
+                "aws_services": analysis_result['services'],
                 "github_url": github_url,
-                "project_name": project_name,
+                "backstage_url": f"http://localhost:3000/create",
                 "type": "image",
                 "analysis_id": analysis.id,
-                "backstage_discovery": f"Proyecto creado con estructura completa para auto-discovery en Backstage"
+                "message": f"Template AWS '{analysis_result['title']}' creado y disponible en Backstage"
             }
         finally:
             # Limpiar archivo temporal
@@ -179,36 +214,50 @@ async def process_diagram(file: UploadFile = File(...), db: Session = Depends(ge
 
 @app.post("/process-text")
 async def process_text(description: str = Form(...), db: Session = Depends(get_db)):
-    """Procesa descripción de texto y genera YAML para Backstage"""
+    """Procesa descripción de texto y genera template de Backstage"""
     try:
-        # Procesar con Gemini Text
-        yaml_content = text_processor.analyze_text(description)
+        # Procesar con Gemini Text para extraer servicios AWS
+        analysis_result = text_processor.analyze_text_for_template(description)
         
-        # Validación más flexible - solo verificar que no esté vacío
-        if not yaml_content or len(yaml_content.strip()) < 10:
-            # Guardar error en DB
+        if not analysis_result or not analysis_result.get('services'):
             save_analysis(db, 'text', description, '', 
-                         status='error', error_message='Generated YAML is empty or too short')
-            return {"status": "error", "message": "Generated YAML is empty or too short"}
+                         status='error', error_message='No AWS services detected in description')
+            return {"status": "error", "message": "No se detectaron servicios AWS en la descripción"}
         
-        # Generar nombre de proyecto basado en la descripción
-        project_name = f"ai-project-{hash(description) % 10000}"
+        # Generar template específico basado en los servicios detectados
+        solution_type = analysis_result.get('solution_type', 'web-app')
+        template_name = f"aws-{solution_type}-{hash(description) % 1000}"
         
-        # Crear estructura completa del proyecto
-        github_url = git_client.save_project(project_name, yaml_content, description)
+        template_data = {
+            "template_name": template_name,
+            "template_title": analysis_result.get('title', 'AWS Application'),
+            "template_description": analysis_result.get('description', description[:200]),
+            "technology": "aws",
+            "component_type": analysis_result.get('component_type', 'service'),
+            "tags": analysis_result.get('tags', ['aws']),
+            "owner": "group:default/developers",
+            "parameters": analysis_result.get('parameters', []),
+            "aws_services": analysis_result.get('services', [])
+        }
+        
+        # Crear template completo
+        template_files = template_generator.generate_aws_template(template_data)
+        github_url = git_client.save_template(template_name, template_files)
         
         # Guardar en base de datos
-        analysis = save_analysis(db, 'text', description, yaml_content, 
-                                github_url, f"{project_name}/catalog-info.yaml")
+        analysis = save_analysis(db, 'text', description, json.dumps(template_data), 
+                                github_url, f"templates/{template_name}/template.yaml")
         
         return {
             "status": "success",
-            "yaml_content": yaml_content,
+            "template_name": template_name,
+            "template_title": analysis_result.get('title', 'AWS Application'),
+            "aws_services": analysis_result.get('services', []),
             "github_url": github_url,
-            "project_name": project_name,
+            "backstage_url": f"http://localhost:3000/create",
             "type": "text",
             "analysis_id": analysis.id,
-            "backstage_discovery": f"Proyecto creado con estructura completa para auto-discovery en Backstage"
+            "message": f"Template AWS '{analysis_result.get('title', 'AWS Application')}' creado y disponible en Backstage"
         }
     except Exception as e:
         # Guardar error en DB
@@ -280,6 +329,62 @@ async def get_github_configuration(db: Session = Depends(get_db)):
         else:
             return {"status": "error", "message": "No hay configuración activa"}
     except Exception as e:
+        return {"status": "error", "message": str(e)}
+
+@app.get("/debug/minio")
+async def debug_minio():
+    """Debug endpoint para verificar estado de MinIO"""
+    try:
+        return {
+            "git_client_use_minio": git_client.use_minio,
+            "git_client_minio_client": git_client.minio_client is not None,
+            "minio_test": "Probando conexión directa..."
+        }
+    except Exception as e:
+        return {"error": str(e)}
+
+@app.post("/create-template")
+async def create_template(template_data: TemplateRequest, db: Session = Depends(get_db)):
+    """Crear un template de Backstage personalizado"""
+    try:
+        # Generar template completo
+        template_files = template_generator.generate_template(
+            name=template_data.template_name,
+            title=template_data.template_title,
+            description=template_data.template_description,
+            technology=template_data.technology,
+            component_type=template_data.component_type,
+            tags=template_data.tags.split(',') if template_data.tags else [],
+            owner=template_data.owner,
+            parameters=[param.dict() for param in template_data.parameters]
+        )
+        
+        # Subir template a GitHub
+        github_url = git_client.save_template(template_data.template_name, template_files)
+        
+        # Guardar en base de datos
+        analysis = save_analysis(
+            db, 
+            'template', 
+            template_data.template_name, 
+            json.dumps(template_files), 
+            github_url, 
+            f"templates/{template_data.template_name}/template.yaml"
+        )
+        
+        return {
+            "status": "success",
+            "template_name": template_data.template_name,
+            "template_id": analysis.id,
+            "github_url": github_url,
+            "backstage_url": f"http://localhost:3000/create",
+            "message": f"Template '{template_data.template_title}' creado y disponible en Backstage"
+        }
+        
+    except Exception as e:
+        # Guardar error en DB
+        save_analysis(db, 'template', template_data.template_name, '', 
+                     status='error', error_message=str(e))
         return {"status": "error", "message": str(e)}
 
 @app.get("/health")

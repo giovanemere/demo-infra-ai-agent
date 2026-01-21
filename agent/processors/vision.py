@@ -1,6 +1,8 @@
 import google.generativeai as genai
 from PIL import Image
 import os
+from generators.backstage_generator import BackstageGenerator
+from validators.backstage_validator import BackstageValidator
 
 class VisionProcessor:
     def __init__(self):
@@ -13,40 +15,170 @@ class VisionProcessor:
                 self.model = genai.GenerativeModel('gemini-pro-vision')
             except:
                 self.model = None
+        
+        # Inicializar generador y validador
+        self.backstage_generator = BackstageGenerator()
+        self.validator = BackstageValidator()
     
-    def analyze_diagram(self, image_path: str) -> str:
+    def analyze_architecture_for_template(self, image_path: str) -> dict:
+        """
+        Analiza imagen de arquitectura AWS y extrae servicios para crear template
+        
+        Args:
+            image_path: Ruta a la imagen del diagrama
+            
+        Returns:
+            Dict con servicios AWS detectados y metadatos para template
+        """
         if not self.model:
-            # Fallback si no hay modelo de visión disponible
-            return self._generate_fallback_yaml(image_path)
+            return self._generate_fallback_template()
         
         try:
             image = Image.open(image_path)
             
             prompt = """
-            Eres un experto en Platform Engineering. Analiza este diagrama de arquitectura AWS y genera un catalog-info.yaml válido para Backstage.
-
-            REGLAS:
-            1. Mapea cada servicio AWS a un componente Backstage
-            2. S3 Bucket -> kind: Resource, type: storage
-            3. Lambda -> kind: Component, type: service  
-            4. CloudFront -> kind: Component, type: cdn
-            5. Route53 -> kind: Resource, type: dns
-            6. Siempre incluir: owner: platform-team
-            7. Añadir annotation: aws.com/cost-center: free-tier-audit
-
-            FORMATO: Solo YAML válido, sin explicaciones adicionales.
+            Analiza esta imagen de arquitectura AWS y extrae:
+            
+            1. SERVICIOS AWS detectados (nombres exactos como S3, Lambda, CloudFront, etc.)
+            2. TIPO DE SOLUCIÓN (web-app, data-pipeline, serverless, etc.)
+            3. TÍTULO descriptivo de la solución
+            4. DESCRIPCIÓN técnica
+            5. PARÁMETROS necesarios para el template
+            6. TAGS relevantes
+            
+            Responde en formato JSON:
+            {
+                "services": ["S3", "CloudFront", "Lambda", "RDS"],
+                "solution_type": "web-app",
+                "title": "AWS Web Application with CDN",
+                "description": "Aplicación web serverless con S3, CloudFront y Lambda",
+                "component_type": "service",
+                "tags": ["aws", "serverless", "web", "cdn"],
+                "parameters": [
+                    {"name": "environment", "title": "Environment", "type": "string"},
+                    {"name": "region", "title": "AWS Region", "type": "string"}
+                ]
+            }
             """
             
             response = self.model.generate_content([prompt, image])
-            return response.text
+            
+            # Extraer JSON de la respuesta
+            import json
+            import re
+            
+            json_match = re.search(r'\{.*\}', response.text, re.DOTALL)
+            if json_match:
+                result = json.loads(json_match.group())
+                
+                # Validar que tenga servicios AWS
+                if result.get('services') and len(result['services']) > 0:
+                    return result
+            
+            return self._generate_fallback_template()
             
         except Exception as e:
-            print(f"Error procesando imagen con Gemini: {e}")
-            return self._generate_fallback_yaml(image_path)
+            print(f"Error analyzing image: {e}")
+            return self._generate_fallback_template()
     
-    def _generate_fallback_yaml(self, image_path: str) -> str:
-        """Genera YAML de ejemplo cuando no se puede procesar la imagen"""
+    def _generate_fallback_template(self) -> dict:
+        """Genera template básico cuando falla el análisis"""
+        return {
+            "services": ["S3", "Lambda", "CloudFront"],
+            "solution_type": "web-app",
+            "title": "AWS Web Application",
+            "description": "Aplicación web básica con servicios AWS",
+            "component_type": "service",
+            "tags": ["aws", "web", "serverless"],
+            "parameters": [
+                {"name": "environment", "title": "Environment", "type": "string"},
+                {"name": "region", "title": "AWS Region", "type": "string"}
+            ]
+        }
+        """
+        Analiza diagrama de arquitectura y genera YAML Backstage válido
+        
+        Args:
+            image_path: Ruta a la imagen del diagrama
+            
+        Returns:
+            YAML válido para Backstage
+        """
+        if not self.model:
+            # Usar generador estándar como fallback
+            return self._generate_from_image_name(image_path)
+        
+        try:
+            image = Image.open(image_path)
+            
+            # 1. Extraer descripción de la imagen usando IA
+            description = self._extract_description_from_image(image)
+            
+            # 2. Generar definiciones usando el generador estándar
+            definitions = self.backstage_generator.generate_from_description(
+                description, 
+                source_type='image'
+            )
+            
+            # 3. Convertir a YAML
+            yaml_content = self.backstage_generator.to_yaml(definitions)
+            
+            # 4. Validar YAML generado
+            is_valid, errors, parsed = self.validator.validate_yaml(yaml_content)
+            
+            if not is_valid:
+                print(f"YAML generado tiene errores: {errors}")
+                # Intentar corregir automáticamente
+                yaml_content = self.validator.fix_common_issues(yaml_content)
+                
+                # Validar nuevamente
+                is_valid, errors, parsed = self.validator.validate_yaml(yaml_content)
+                if not is_valid:
+                    print(f"No se pudieron corregir todos los errores: {errors}")
+                    # Usar fallback
+                    return self._generate_from_image_name(image_path)
+            
+            return yaml_content
+            
+        except Exception as e:
+            print(f"Error procesando imagen: {e}")
+            return self._generate_from_image_name(image_path)
+    
+    def _extract_description_from_image(self, image: Image) -> str:
+        """Extrae descripción textual de la imagen usando IA"""
+        try:
+            prompt = """
+            Analiza este diagrama de arquitectura AWS y describe en texto plano los servicios y conexiones que ves.
+            
+            Enfócate en:
+            1. Servicios AWS identificados (Lambda, S3, CloudFront, etc.)
+            2. Flujo de datos entre servicios
+            3. Propósito general de la arquitectura
+            
+            Responde solo con la descripción en texto, sin formato YAML.
+            """
+            
+            response = self.model.generate_content([prompt, image])
+            return response.text.strip()
+            
+        except Exception as e:
+            print(f"Error extrayendo descripción de imagen: {e}")
+            return "Arquitectura AWS con múltiples servicios interconectados"
+    
+    def _generate_from_image_name(self, image_path: str) -> str:
+        """Genera YAML basado en el nombre de la imagen como fallback"""
         image_name = os.path.basename(image_path).replace('.png', '').replace('.jpg', '').replace('.jpeg', '')
+        
+        # Crear descripción básica basada en el nombre del archivo
+        description = f"Arquitectura AWS basada en imagen: {image_name}"
+        
+        # Usar el generador estándar
+        definitions = self.backstage_generator.generate_from_description(
+            description, 
+            source_type='image'
+        )
+        
+        return self.backstage_generator.to_yaml(definitions)
         
         return f"""apiVersion: backstage.io/v1alpha1
 kind: Component
