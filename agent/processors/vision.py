@@ -9,12 +9,15 @@ class VisionProcessor:
         genai.configure(api_key=os.getenv('GEMINI_API_KEY'))
         # Usar modelo disponible para visión
         try:
-            self.model = genai.GenerativeModel('gemini-1.5-flash')
+            self.model = genai.GenerativeModel('gemini-2.5-flash')
         except:
             try:
-                self.model = genai.GenerativeModel('gemini-pro-vision')
+                self.model = genai.GenerativeModel('gemini-flash-latest')
             except:
-                self.model = None
+                try:
+                    self.model = genai.GenerativeModel('gemini-pro-latest')
+                except:
+                    self.model = None
         
         # Inicializar generador y validador
         self.backstage_generator = BackstageGenerator()
@@ -218,3 +221,37 @@ spec:
   lifecycle: experimental
   owner: platform-team
   system: web-platform"""
+    def process_image(self, image_path: str) -> dict:
+        """
+        Procesa imagen de arquitectura y devuelve análisis estructurado
+        
+        Args:
+            image_path: Ruta a la imagen
+            
+        Returns:
+            dict: Análisis estructurado con servicios AWS detectados
+        """
+        try:
+            # Usar el método existente de análisis
+            analysis = self.analyze_architecture_for_template(image_path)
+            
+            # Estructurar respuesta
+            return {
+                "title": analysis.get("title", "AWS Application"),
+                "description": analysis.get("description", "Aplicación AWS generada desde imagen"),
+                "services": analysis.get("services", []),
+                "architecture_type": analysis.get("architecture_type", "web-app"),
+                "components": analysis.get("components", []),
+                "type": "image_analysis"
+            }
+            
+        except Exception as e:
+            return {
+                "title": "AWS Application",
+                "description": f"Error al procesar imagen: {str(e)}",
+                "services": ["S3", "Lambda"],  # Servicios por defecto
+                "architecture_type": "web-app",
+                "components": [],
+                "type": "image_analysis",
+                "error": str(e)
+            }

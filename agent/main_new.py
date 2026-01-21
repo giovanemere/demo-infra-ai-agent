@@ -1,4 +1,4 @@
-from fastapi import FastAPI, UploadFile, File, Form, Depends, HTTPException, Request
+from fastapi import FastAPI, UploadFile, File, Form, Depends, HTTPException
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
@@ -114,7 +114,7 @@ async def scaffolder_analyze_text(input_data: ScaffolderInput, db: Session = Dep
         template_data = template_generator.generate_from_analysis(analysis, template_id, project_name)
         
         # Guardar en base de datos
-        save_analysis(db, "text", description, json.dumps(analysis), template_id)
+        save_analysis(db, "text", description, analysis, template_id)
         
         # Subir a GitHub (si está configurado)
         repo_url = None
@@ -158,7 +158,7 @@ async def scaffolder_analyze_image(
             template_data = template_generator.generate_from_analysis(analysis, template_id, project_name)
             
             # Guardar en base de datos
-            save_analysis(db, "image", f"Image analysis for {project_name}", json.dumps(analysis), template_id)
+            save_analysis(db, "image", f"Image analysis for {project_name}", analysis, template_id)
             
             # Subir a GitHub (si está configurado)
             repo_url = None
@@ -196,7 +196,7 @@ async def api_analyze_text(request: AnalysisRequest, db: Session = Depends(get_d
         )
         
         # Guardar análisis
-        save_analysis(db, "text", request.description, json.dumps(analysis), template_id)
+        save_analysis(db, "text", request.description, analysis, template_id)
         
         return {
             "analysis": analysis,
@@ -231,7 +231,7 @@ async def api_analyze_image(
             template_data = template_generator.generate_from_analysis(analysis, template_id, project_name)
             
             # Guardar análisis
-            save_analysis(db, "image", f"Image analysis for {project_name}", json.dumps(analysis), template_id)
+            save_analysis(db, "image", f"Image analysis for {project_name}", analysis, template_id)
             
             return {
                 "analysis": analysis,
@@ -287,79 +287,17 @@ async def process_text_legacy(description: str = Form(...), db: Session = Depend
     request = AnalysisRequest(description=description)
     return await api_analyze_text(request, db)
 
+@app.post("/process-image")
+async def process_image_legacy(file: UploadFile = File(...), db: Session = Depends(get_db)):
+    """Legacy endpoint - use /api/analyze/image instead"""
+    return await api_analyze_image(file, "legacy-project", db)
+
 # Frontend para desarrollo (mantener solo para debug)
 @app.get("/", response_class=HTMLResponse)
 async def serve_frontend():
     """Serve development frontend"""
     with open("static/index.html", "r", encoding="utf-8") as f:
         return HTMLResponse(content=f.read())
-
-@app.post("/process-image")
-async def process_image_frontend(file: UploadFile):
-    """Endpoint para procesar imagen desde el frontend"""
-    try:
-        print(f"🔍 Parámetros recibidos: file={file}")
-        print(f"🔍 Tipo de file: {type(file)}")
-        
-        if not file:
-            print("❌ No se recibió archivo")
-            return {"status": "error", "message": "No se recibió ningún archivo"}
-        
-        print(f"📁 Archivo recibido: {file.filename}, tipo: {getattr(file, 'content_type', 'unknown')}")
-        
-        # Leer contenido del archivo
-        content = await file.read()
-        print(f"📊 Tamaño del archivo: {len(content)} bytes")
-        
-        if len(content) == 0:
-            return {"status": "error", "message": "El archivo está vacío"}
-        
-        # Guardar imagen temporalmente
-        with tempfile.NamedTemporaryFile(delete=False, suffix=".png") as tmp_file:
-            tmp_file.write(content)
-            tmp_path = tmp_file.name
-        
-        try:
-            # Procesar imagen con IA
-            analysis_result = vision.process_image(tmp_path)
-            
-            # Generar nombre único para el template
-            template_name = f"aws-image-app-{hashlib.md5(content).hexdigest()[:8]}"
-            
-            # Crear datos del template
-            template_data = {
-                "template_name": template_name,
-                "template_title": analysis_result.get('title', 'AWS Application'),
-                "services": analysis_result.get('services', []),
-                "architecture_type": analysis_result.get('architecture_type', 'web-app'),
-                "description": analysis_result.get('description', 'Aplicación AWS generada desde imagen')
-            }
-            
-            # Generar template completo
-            template_files = template_generator.generate_aws_template(template_data)
-            github_url = git_client.save_template(template_name, template_files)
-            
-            return {
-                "status": "success",
-                "project_name": template_name,
-                "template_name": template_name,
-                "template_title": analysis_result.get('title', 'AWS Application'),
-                "aws_services": analysis_result.get('services', []),
-                "github_url": github_url,
-                "backstage_url": f"http://localhost:3000/create",
-                "backstage_discovery": f"Servicios AWS detectados: {', '.join(analysis_result.get('services', []))}",
-                "yaml_content": template_files.get('template.yaml', '# Template generado'),
-                "type": "image",
-                "message": f"Template AWS '{analysis_result.get('title', 'AWS Application')}' creado y disponible en Backstage"
-            }
-            
-        finally:
-            # Limpiar archivo temporal
-            os.unlink(tmp_path)
-            
-    except Exception as e:
-        print(f"❌ Error procesando imagen: {str(e)}")
-        return {"status": "error", "message": f"Error procesando imagen: {str(e)}"}
 
 if __name__ == "__main__":
     import uvicorn

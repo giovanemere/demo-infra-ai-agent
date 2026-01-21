@@ -14,11 +14,56 @@ class TextProcessor:
             raise ValueError("GEMINI_API_KEY no encontrada en variables de entorno")
         
         genai.configure(api_key=api_key)
-        self.model = genai.GenerativeModel('gemini-1.5-pro')
+        # Usar modelo disponible
+        try:
+            self.model = genai.GenerativeModel('gemini-2.5-flash')
+        except:
+            try:
+                self.model = genai.GenerativeModel('gemini-flash-latest')
+            except:
+                try:
+                    self.model = genai.GenerativeModel('gemini-pro-latest')
+                except:
+                    raise ValueError("No se pudo inicializar ningún modelo de Gemini")
         
         # Inicializar generador y validador
         self.backstage_generator = BackstageGenerator()
         self.validator = BackstageValidator()
+    
+    def process(self, text_description: str) -> dict:
+        """
+        Procesa descripción de texto y devuelve análisis estructurado
+        
+        Args:
+            text_description: Descripción del proyecto
+            
+        Returns:
+            dict: Análisis estructurado con servicios AWS detectados
+        """
+        try:
+            # Usar el método existente de análisis
+            analysis = self.analyze_text_for_template(text_description)
+            
+            # Estructurar respuesta
+            return {
+                "title": analysis.get("title", "AWS Application"),
+                "description": analysis.get("description", text_description),
+                "services": analysis.get("services", []),
+                "architecture_type": analysis.get("architecture_type", "web-app"),
+                "components": analysis.get("components", []),
+                "type": "text_analysis"
+            }
+            
+        except Exception as e:
+            return {
+                "title": "AWS Application",
+                "description": f"Error al procesar texto: {str(e)}",
+                "services": ["S3", "Lambda"],  # Servicios por defecto
+                "architecture_type": "web-app",
+                "components": [],
+                "type": "text_analysis",
+                "error": str(e)
+            }
     
     def analyze_text_for_template(self, text_description: str) -> dict:
         """
