@@ -1,193 +1,168 @@
 # 🤖 Infrastructure AI Agent
 
-## 📋 Descripción
+**Análisis automático de arquitecturas AWS con IA → Templates de Backstage**
 
-AI Agent para análisis automático de arquitecturas de infraestructura usando Google Gemini API. Procesa descripciones de texto e imágenes para generar definiciones de Backstage YAML automáticamente.
+AI Agent que procesa descripciones de texto e imágenes de arquitecturas AWS usando Gemini AI, genera templates de Backstage automáticamente y los integra con GitHub.
 
 ## 🏗️ Arquitectura
 
 ```
-Frontend (Static) → FastAPI Backend → Gemini AI → Validators → GitHub → Backstage
+Backstage Frontend → AI Agent (FastAPI) → Gemini AI → Template Generator → GitHub → Backstage Catalog
 ```
 
-### Componentes:
-- **Frontend**: Interfaz web estática (HTML/JS)
-- **Backend**: FastAPI + Python
-- **Procesadores**: Texto e imágenes con Gemini
-- **Validadores**: Validación YAML de Backstage
-- **Git Client**: Sincronización automática con GitHub
+### 🔧 Componentes Principales
+
+- **FastAPI Backend**: API REST con endpoints para procesamiento
+- **Gemini AI Integration**: Análisis inteligente de texto e imágenes
+- **Template Generators**: Generación automática de templates Backstage
+- **GitHub Integration**: Sincronización automática de templates
+- **Backstage Integration**: Catálogo dinámico de templates
 
 ## 🚀 Inicio Rápido
 
+### Prerrequisitos
 ```bash
-# 1. Configurar entorno
-./setup.sh
-
-# 2. Configurar API key
-echo "GEMINI_API_KEY=your_api_key" >> .env
-
-# 3. Iniciar servicio
-./start.sh
+# Python 3.9+
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
 ```
 
-**URL**: http://localhost:8000
+### Configuración
+```bash
+# Copiar variables de entorno
+cp .env.example .env
+
+# Editar .env con tus credenciales:
+# GEMINI_API_KEY=tu_api_key_de_gemini
+# GITHUB_TOKEN=tu_github_token
+# GITHUB_CLIENT_ID=tu_github_client_id
+```
+
+### Ejecutar
+```bash
+# Desde el directorio agent/
+cd agent
+uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+```
+
+## 🌐 Endpoints API
+
+### Procesamiento de Texto
+```bash
+curl -X POST "http://localhost:8000/process-text" \
+  -F "description=Aplicación web con S3, CloudFront y Lambda"
+```
+
+### Análisis de Imágenes
+```bash
+curl -X POST "http://localhost:8000/process-image" \
+  -F "file=@architecture-diagram.png"
+```
+
+### Health Check
+```bash
+curl http://localhost:8000/health
+```
 
 ## 📁 Estructura del Proyecto
 
 ```
-agent/
-├── main.py              # API principal FastAPI
-├── processors/          # Procesadores IA
-│   ├── text.py         # Análisis de texto
-│   └── vision.py       # Análisis de imágenes
-├── validators/          # Validadores
-│   └── backstage.py    # Validación YAML Backstage
-├── generators/          # Generadores de contenido
-├── database.py          # Gestión de base de datos
-├── git_client.py        # Cliente Git para sincronización
-└── static/             # Frontend web
-    └── index.html      # Interfaz principal
+infra-ai-agent/
+├── agent/                          # Código principal
+│   ├── main.py                     # FastAPI application
+│   ├── processors/                 # Procesadores IA
+│   │   ├── text.py                 # Procesamiento de texto
+│   │   └── vision.py               # Análisis de imágenes
+│   ├── generators/                 # Generadores de templates
+│   │   ├── template_generator.py   # Generador principal
+│   │   └── scaffolder_generator.py # Generador Backstage
+│   ├── validators/                 # Validadores
+│   └── static/                     # Frontend estático
+├── venv/                           # Entorno virtual Python
+├── requirements.txt                # Dependencias
+├── .env.example                    # Variables de entorno ejemplo
+└── README.md                       # Esta documentación
 ```
 
-## 🔧 Funcionalidades
+## 🔧 Configuración Avanzada
 
-### 1. **Procesamiento de Texto**
-- Análisis de descripciones de arquitectura
-- Extracción de componentes y relaciones
-- Generación de YAML estructurado
-
-### 2. **Procesamiento de Imágenes**
-- Análisis de diagramas de arquitectura
-- Reconocimiento de componentes visuales
-- Interpretación de flujos y conexiones
-
-### 3. **Validación YAML**
-- Validación de sintaxis Backstage
-- Verificación de estructura
-- Corrección automática de errores
-
-### 4. **Sincronización Git**
-- Push automático a repositorio GitHub
-- Organización por proyectos
-- Versionado automático
-
-## 🔌 API Endpoints
-
-### **POST /process-text**
-Procesa descripción de texto de arquitectura
-```json
-{
-  "description": "App web con S3, CloudFront y Lambda"
-}
-```
-
-### **POST /process-image**
-Procesa imagen de diagrama de arquitectura
-```json
-{
-  "image": "base64_encoded_image"
-}
-```
-
-### **GET /health**
-Verificación de estado del servicio
-
-### **GET /docs**
-Documentación interactiva de la API
-
-## ⚙️ Configuración
-
-### Variables de Entorno (.env)
+### Variables de Entorno
 ```bash
 # API Keys
 GEMINI_API_KEY=your_gemini_api_key
-
-# GitHub
 GITHUB_TOKEN=your_github_token
-
-# Base de datos
-POSTGRES_HOST=localhost
-POSTGRES_PORT=5432
-POSTGRES_USER=backstage
-POSTGRES_PASSWORD=backstage123
-POSTGRES_DB=backstage
+GITHUB_CLIENT_ID=your_github_client_id
 
 # Repositorios
-TEMPLATES_REPO=git@github.com:giovanemere/demo-infra-ai-agent-template-idp.git
+TEMPLATES_REPO=git@github.com:user/templates-repo.git
+CATALOG_REPO=git@github.com:user/catalog-repo.git
+
+# Base de datos
+DATABASE_URL=postgresql://user:pass@localhost:5432/backstage
 ```
 
-## 🔄 Flujo de Procesamiento
-
-1. **Input**: Usuario envía descripción/imagen
-2. **Análisis**: Gemini AI procesa el contenido
-3. **Estructuración**: Extrae componentes y relaciones
-4. **Generación**: Crea YAML de Backstage válido
-5. **Validación**: Verifica estructura y sintaxis
-6. **Almacenamiento**: Guarda en repositorio GitHub
-7. **Sincronización**: Backstage detecta automáticamente
+### Integración con Backstage
+El AI Agent se integra automáticamente con Backstage a través de:
+- Templates generados en formato Scaffolder v1beta3
+- Catálogo dinámico sincronizado con GitHub
+- Componentes registrados automáticamente
 
 ## 🧪 Testing
 
 ```bash
-# Test básico
-curl -X POST "http://localhost:8000/process-text" \
-  -H "Content-Type: application/json" \
-  -d '{"description": "App web con S3 y Lambda"}'
-
-# Test con imagen
-curl -X POST "http://localhost:8000/process-image" \
-  -F "image=@diagram.png"
-```
-
-## 📊 Monitoreo
-
-### Logs
-```bash
-tail -f ai-agent.log
-```
-
-### Métricas
-- Requests procesados
-- Tiempo de respuesta
-- Errores de validación
-- Sincronizaciones exitosas
-
-## 🔧 Desarrollo
-
-### Instalación de dependencias
-```bash
-pip install -r requirements.txt
-```
-
-### Estructura de desarrollo
-```bash
-# Activar entorno virtual
-source venv/bin/activate
-
-# Instalar en modo desarrollo
-pip install -e .
-
 # Ejecutar tests
 python -m pytest
 
-# Linting
-flake8 agent/
+# Test específico del AI Agent
+python test_ai_agent.py
+
+# Test de MinIO
+python test_minio.py
 ```
 
-## 🎯 Estado Actual
+## 📚 Documentación
 
-- ✅ **API FastAPI**: Funcionando
-- ✅ **Procesador de texto**: Gemini integrado
-- ✅ **Procesador de imágenes**: Gemini Vision
-- ✅ **Validador YAML**: Backstage compatible
-- ✅ **Git Client**: Sincronización automática
-- ✅ **Frontend**: Interfaz web funcional
-- ✅ **Base de datos**: PostgreSQL integrada
+- **[Arquitectura Detallada](docs/architecture.md)**
+- **[Configuración](docs/configuration.md)**
+- **[API Reference](docs/api.md)**
 
-## 🚀 Próximas Mejoras
+## 🐛 Troubleshooting
 
-- [ ] Cache de respuestas IA
-- [ ] Métricas avanzadas
-- [ ] Templates personalizados
-- [ ] Integración con más proveedores IA
-- [ ] API de webhooks
+### Problemas Comunes
+
+**Error: Gemini API Key**
+```bash
+# Verificar API key
+echo $GEMINI_API_KEY
+```
+
+**Error: Puerto ocupado**
+```bash
+# Liberar puerto 8000
+sudo lsof -ti:8000 | xargs kill -9
+```
+
+**Error: Dependencias**
+```bash
+# Reinstalar dependencias
+pip install -r requirements.txt --force-reinstall
+```
+
+## 🤝 Contribución
+
+1. Fork el repositorio
+2. Crear rama feature (`git checkout -b feature/nueva-funcionalidad`)
+3. Commit cambios (`git commit -am 'Agregar nueva funcionalidad'`)
+4. Push a la rama (`git push origin feature/nueva-funcionalidad`)
+5. Crear Pull Request
+
+## 📄 Licencia
+
+Este proyecto está bajo la Licencia MIT.
+
+---
+
+**Parte de**: [Infrastructure AI Platform](https://github.com/giovanemere/demo-infrastructure-ai-platform)  
+**Versión**: v1.2.0  
+**Última actualización**: Enero 2026
