@@ -1,0 +1,11 @@
+apiVersion: backstage.io/v1alpha1
+kind: Location
+metadata:
+  name: infrastructure-ai-templates
+  title: Infrastructure AI Platform Templates
+  description: Templates generados automáticamente por IA
+spec:
+  targets:
+    - https://github.com/giovanemere/demo-infra-ai-agent-template-idp/blob/main/templates/aws-web-app/template.yaml
+    - https://github.com/giovanemere/demo-infra-ai-agent-template-idp/blob/main/templates/aws-simple-web-app/template.yaml
+    - https://github.com/giovanemere/demo-infra-ai-agent-template-idp/blob/main/templates/ai-infrastructure-project/template.yaml

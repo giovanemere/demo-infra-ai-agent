@@ -83,6 +83,7 @@ curl -X POST "http://localhost:8000/process-image" \
 - **[Workflows](docs/ai/workflows.md)** - Flujos de trabajo
 - **[Componentes](docs/ai/components.md)** - Documentación técnica
 - **[Troubleshooting](docs/ai/troubleshooting.md)** - Resolución de problemas
+- **[Templates Analysis](docs/ai/backstage-templates-analysis.md)** - Análisis y corrección de templates
 
 ### Release Notes (`docs/versions/`)
 - **[v1.2.0](docs/versions/VERSION_1.2.0.md)** - Versión actual

@@ -1,0 +1,55 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: aws-web-app
+  title: AWS Web Application
+  description: Template para crear aplicaciones web en AWS con S3, CloudFront y Lambda
+  tags:
+    - recommended
+    - aws
+    - serverless
+    - web
+spec:
+  owner: user:development/guest
+  type: service
+  parameters:
+    - title: Project Information
+      required:
+        - name
+        - description
+      properties:
+        name:
+          title: Name
+          type: string
+          description: Unique name of the component
+          pattern: '^([a-z0-9]|[a-z0-9][a-z0-9\-]*[a-z0-9])$'
+        description:
+          title: Description
+          type: string
+          description: Help others understand what this component is for
+        owner:
+          title: Owner
+          type: string
+          description: Owner of the component
+          default: user:development/guest
+    - title: Choose a location
+      required:
+        - repoUrl
+      properties:
+        repoUrl:
+          title: Repository Location
+          type: string
+          ui:field: RepoUrlPicker
+          ui:options:
+            allowedHosts:
+              - github.com
+  steps:
+    - id: log
+      name: Log
+      action: debug:log
+      input:
+        message: 'Creating AWS Web App: ${{ parameters.name }}'
+  output:
+    text:
+      - title: AWS Web App created
+        content: 'AWS Web Application ${{ parameters.name }} has been created successfully!'

@@ -1,0 +1,35 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: simple-component
+  title: Simple Component
+  description: A simple component template
+  tags:
+    - recommended
+spec:
+  owner: user:development/guest
+  type: service
+  parameters:
+    - title: Component Info
+      required:
+        - name
+      properties:
+        name:
+          title: Name
+          type: string
+          description: Unique name of the component
+        description:
+          title: Description
+          type: string
+          description: Description of the component
+          default: A simple component
+  steps:
+    - id: log
+      name: Log
+      action: debug:log
+      input:
+        message: 'Creating component ${{ parameters.name }}'
+  output:
+    text:
+      - title: Component created
+        content: 'Component ${{ parameters.name }} has been created successfully!'
